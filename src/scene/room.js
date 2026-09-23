@@ -70,17 +70,23 @@ export function buildRoom(layout) {
   group.add(ceiling);
 
   // Öffnungen ausgestalten
-  for (const o of layout.oeffnungen) {
+  layout.oeffnungen.forEach((o, i) => {
     const wz = o.wand === 'front' ? [-t, 0] : [D, D + t];
     const inner = o.wand === 'front' ? 0 : D;
     const dir = o.wand === 'front' ? 1 : -1; // Richtung ins Rauminnere
     const unten = o.unten ?? 0;
-    // Orangefarbener Rahmen innen
+    // Orangefarbener Rahmen. Gegen Flimmern (Z-Fighting) darf keine Rahmenfläche genau auf einer
+    // Wandfläche liegen: Rahmen ragen 5 mm in die Öffnung, und jede Öffnung steht minimal anders weit
+    // vor der Wand, damit sich benachbarte Rahmen (Tür/Schaufenster) nicht überdecken.
     const f = 0.06;
-    const fz = [wz[0] - 0.02, wz[1] + 0.02]; // leicht vor der Wand, sonst flimmert es (Z-Fighting)
-    group.add(box(mat.akzent, [o.von - f, o.von, fz[0], fz[1]], o.hoehe - unten + f, unten));
-    group.add(box(mat.akzent, [o.bis, o.bis + f, fz[0], fz[1]], o.hoehe - unten + f, unten));
-    group.add(box(mat.akzent, [o.von - f, o.bis + f, fz[0], fz[1]], f, o.hoehe));
+    const e = 0.005;
+    const out = 0.02 + i * 0.004;
+    const fz = [wz[0] - out, wz[1] + out];
+    const y0 = unten > 0 ? unten - f : 0;
+    group.add(box(mat.akzent, [o.von - f, o.von + e, fz[0], fz[1]], o.hoehe + f - y0, y0));
+    group.add(box(mat.akzent, [o.bis - e, o.bis + f, fz[0], fz[1]], o.hoehe + f - y0, y0));
+    group.add(box(mat.akzent, [o.von - f, o.bis + f, fz[0], fz[1]], f + e, o.hoehe - e));
+    if (unten > 0) group.add(box(mat.akzent, [o.von - f, o.bis + f, fz[0], fz[1]], f + e, unten - f));
 
     if (o.typ === 'glas') {
       const pane = box(mat.glas, [o.von, o.bis, -t / 2 - 0.01, -t / 2 + 0.01], o.hoehe - unten, unten);
@@ -100,7 +106,7 @@ export function buildRoom(layout) {
       s.rotation.y = o.wand === 'front' ? Math.PI : 0;
       group.add(s);
     }
-  }
+  });
 
   // Innenwände (Lager)
   for (const w of layout.innenwaende || []) {
