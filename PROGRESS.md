@@ -6,8 +6,8 @@
 |---|---|---|
 | 1 | Projekt-Setup, leerer Raum (Wände, Eingang, Schaufenster, Notausgang, Lagerwand), Controller-/Tastatur-/Touch-Steuerung mit Kollision, GitHub Pages, PWA/Offline | ✅ fertig, auf dem iPad getestet |
 | 2 | `layout.json` vollständig: Zonen Z1–Z8, Möbel M1–M12, Plattencover, Regalzonen + Höhenmarken | ✅ fertig |
-| 3 | Licht und Materialien je Zone (aus `layout.json`), Spots, Filz, Holz/Beton | ⏳ als Nächstes |
-| 4 | Draufsicht (orthografisch), Hauptweg mit Pfeilen, Sammler-Weg, Legende, Maßstab, PNG-Export (iPad: Teilen-Dialog / neuer Tab) | offen |
+| 3 | Licht und Materialien je Zone (aus `layout.json`), Spots, Filz, Holz/Beton | ✅ fertig |
+| 4 | Draufsicht (orthografisch), Hauptweg mit Pfeilen, Sammler-Weg, Legende, Maßstab, PNG-Export (iPad: Teilen-Dialog / neuer Tab) | ⏳ als Nächstes |
 | 5 | Infokarten, Präsentationsmodus mit 8 Stationen, Rahmen-Overlay | offen |
 | 6 | Feinschliff: 60 fps auf iPad/Laptop, optional Lo-Fi-Loop, README | offen |
 
@@ -37,6 +37,18 @@
 - Performance: Teile werden pro Material zusammengefasst, Platten als Instanzen → ca. 100 Draw Calls, ca. 32.000 Dreiecke.
 - URL-Parameter für Tests: `?pos=x,z,blickGrad` setzt den Startpunkt, `?debug` stellt `window.rille` bereit.
 
-## Als Nächstes (Etappe 3)
-- Licht pro Zone aus `layout.json` (warm 2700 K in Z4/Z5, neutral 4000 K in Z6), Spots auf M1 und die Sichtzone von M4.
-- Materialien: Holzboden auf Warenflächen, Beton auf Kundenflächen, Filz-Paneele an der Bar, Wände Anthrazit mit orangen Akzenten.
+## Etappe 3 – erledigt
+- Licht je Zone in `layout.json` (`zonen[].licht`): Farbtemperatur in Kelvin, Stärke, Leuchtentyp (`pendel`, `panel`, `strahler`), Leuchtenabstand, Anzahl echter Lichtquellen.
+  - warm 2700 K: Second-Hand (Z4) und Listening Bar (Z5) mit Pendelleuchten
+  - neutral 4000 K: Hardware & Beratung (Z6) mit Deckenpanels
+  - Stromschienen mit Strahlern über Neuheiten (Z2) und Genre-Wand (Z3)
+- Spots (`beleuchtung.spots`): auf das Schaufenster M1 und auf die Sichtzone der Genre-Wand M4 (3 Stück).
+- Grundlicht (Himmel/Boden) und Tageslicht durchs Schaufenster.
+- Materialien (`materialien` und `zonen[].boden`): Holzdielen auf Warenflächen, Beton mit Plattenfugen auf Kundenflächen, Filz-Paneele an Rück- und Seitenwand der Bar, Wände Anthrazit mit orangem Akzentstreifen.
+- Das 1-m-Raster gehört jetzt zur Zonen-Ansicht (wird mit „Zonen“ ein-/ausgeblendet).
+- Leistungsreserve: `?licht=einfach` bzw. `lichtEinfach: true` in `config.js` → weniger Lichtquellen, keine Spots. Stand: ca. 110 Draw Calls, 36.000 Dreiecke, 14 Lichtquellen.
+
+## Als Nächstes (Etappe 4)
+- Draufsicht mit orthografischer Kamera: Zonen farbig mit Namen, Möbel-IDs, Legende, Maßstabsbalken.
+- Hauptweg als leuchtende Linie mit Richtungspfeilen, gestrichelter Sammler-Weg.
+- PNG-Export der Draufsicht (auf dem iPad über den Teilen-Dialog, sonst Bild in neuem Tab).

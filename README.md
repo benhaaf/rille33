@@ -24,9 +24,9 @@ Uni-Projekt (BWL Handel, Store Layout, DHBW Heilbronn). Spezifikation: [SPEC.md]
 | Nächste / vorige Station | R1 / L1 | → / ← | „Weiter“ / „Zurück“ |
 | Rahmen-Overlay | Create | I | „Rahmen“ |
 
-Empfindlichkeit, Deadzone, Tempo und Grafikqualität: `src/config.js`. Store-Daten (Raum, Zonen, Möbel, Regalzonen): `src/layout.json`.
+Empfindlichkeit, Deadzone, Tempo und Grafikqualität: `src/config.js`. Store-Daten (Raum, Zonen, Möbel, Regalzonen, Licht, Materialien): `src/layout.json`.
 
-URL-Parameter: `?pos=x,z,blickGrad` (Startpunkt), `?fps=0` (FPS-Anzeige aus), `?debug` (`window.rille` in der Konsole).
+URL-Parameter: `?pos=x,z,blickGrad` (Startpunkt), `?fps=0` (FPS-Anzeige aus), `?licht=einfach` (weniger Lichtquellen, falls es ruckelt), `?debug` (`window.rille` in der Konsole).
 
 ## Entwicklung
 ```

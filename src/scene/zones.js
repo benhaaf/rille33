@@ -8,6 +8,17 @@ export function buildZones(layout) {
   const group = new THREE.Group();
   group.name = 'Zonen';
 
+  // 1-m-Raster als Planungshilfe (gehört zur Zonen-Ansicht)
+  const { breite: W, tiefe: D } = layout.raum;
+  const n = Math.max(W, D);
+  const grid = new THREE.GridHelper(n, n, 0x2a2a2a, 0x2a2a2a);
+  grid.material.transparent = true;
+  grid.material.opacity = 0.25;
+  grid.material.depthWrite = false;
+  grid.scale.set(W / n, 1, D / n);
+  toThree(W / 2, 0.01, D / 2, grid.position);
+  group.add(grid);
+
   layout.zonen.forEach((z, i) => {
     const [x1, x2, z1, z2] = z.rechteck;
     const w = x2 - x1;

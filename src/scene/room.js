@@ -7,7 +7,6 @@ const unitBox = new THREE.BoxGeometry(1, 1, 1);
 
 const mat = {
   wand: new THREE.MeshStandardMaterial({ color: 0x3a3b40, roughness: 0.9 }),
-  boden: new THREE.MeshStandardMaterial({ color: 0x8a8782, roughness: 0.95 }),
   decke: new THREE.MeshStandardMaterial({ color: 0x2a2a2e, roughness: 1 }),
   akzent: new THREE.MeshStandardMaterial({ color: 0xe8772e, roughness: 0.6 }),
   glas: new THREE.MeshStandardMaterial({ color: 0xbfd9e6, roughness: 0.05, metalness: 0.1, transparent: true, opacity: 0.18, depthWrite: false }),
@@ -45,6 +44,10 @@ function sign(text, { bg, fg, w, h }) {
 
 export function buildRoom(layout) {
   const { breite: W, tiefe: D, hoehe: H, wandstaerke: t } = layout.raum;
+  const M = layout.materialien || {};
+  if (M.wand) mat.wand.color.set(M.wand);
+  if (M.decke) mat.decke.color.set(M.decke);
+  if (M.akzent) mat.akzent.color.set(M.akzent);
   const group = new THREE.Group();
   group.name = 'Raum';
   const colliders = [];
@@ -59,25 +62,11 @@ export function buildRoom(layout) {
   // Kollision: Außenwände komplett (man verlässt den Laden nicht durch Tür oder Notausgang)
   colliders.push([-t - 1, W + t + 1, -t - 1, 0], [-t - 1, W + t + 1, D, D + t + 1], [-t - 1, 0, -t, D + t], [W, W + t + 1, -t, D + t]);
 
-  // Boden, Decke
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(W, D), mat.boden);
-  floor.rotation.x = -Math.PI / 2;
-  toThree(W / 2, 0, D / 2, floor.position);
-  group.add(floor);
-
+  // Decke (Böden kommen aus surfaces.js)
   const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(W, D), mat.decke);
   ceiling.rotation.x = Math.PI / 2;
   toThree(W / 2, H, D / 2, ceiling.position);
   group.add(ceiling);
-
-  // 1-m-Raster als Orientierungshilfe
-  const grid = new THREE.GridHelper(Math.max(W, D), Math.max(W, D), 0x6f6c68, 0x7b7874);
-  grid.material.transparent = true;
-  grid.material.opacity = 0.35;
-  grid.scale.set(W / Math.max(W, D), 1, D / Math.max(W, D));
-  toThree(W / 2, 0.003, D / 2, grid.position);
-  grid.name = 'Raster';
-  group.add(grid);
 
   // Öffnungen ausgestalten
   for (const o of layout.oeffnungen) {
