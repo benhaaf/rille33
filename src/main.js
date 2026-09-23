@@ -5,6 +5,8 @@ import layout from './layout.json';
 import { buildRoom } from './scene/room.js';
 import { buildFurniture } from './scene/furniture.js';
 import { buildZones, buildShelfZones } from './scene/zones.js';
+import { buildLighting } from './scene/lighting.js';
+import { buildFloors, buildWallDetails } from './scene/surfaces.js';
 import { Collider } from './collision.js';
 import { Player } from './player.js';
 import { ActionBus, ACTIONS } from './input/actions.js';
@@ -29,20 +31,12 @@ scene.background = new THREE.Color(0xa9c3d6);
 
 const camera = new THREE.PerspectiveCamera(config.grafik.fov, window.innerWidth / window.innerHeight, 0.05, 120);
 
-// Grundlicht (Etappe 3 ersetzt das durch Licht je Zone aus layout.json)
-scene.add(new THREE.HemisphereLight(0xfff4e8, 0x5a524a, 2.4));
-const sun = new THREE.DirectionalLight(0xfff8f0, 1.0);
-sun.position.set(3, 8, 5);
-scene.add(sun);
-for (const [x, z] of [[3, 4], [9, 4], [3, 10], [9, 10]]) {
-  const l = new THREE.PointLight(0xffd2a0, 8, 9, 1.2);
-  l.position.set(x, 3.0, -z);
-  scene.add(l);
-}
-
 // Raum
 const room = buildRoom(layout);
 scene.add(room.group);
+scene.add(buildFloors(layout));
+scene.add(buildWallDetails(layout));
+buildLighting(layout, scene);
 const furniture = buildFurniture(layout);
 scene.add(furniture.group);
 const zones = buildZones(layout);

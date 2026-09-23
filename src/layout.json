@@ -27,14 +27,70 @@
     { "id": "lager", "name": "Lager / Backoffice", "rechteck": [0, 4.5, 12, 15], "darstellung": "keine" }
   ],
   "zonen": [
-    { "id": "Z1", "name": "Eingangszone", "rechteck": [0, 7, 0, 2.5], "typ": "Kundenfläche", "farbe": "#c9c9c9" },
-    { "id": "Z2", "name": "Neuheiten & Charts", "rechteck": [2.8, 7.5, 2.5, 6.5], "typ": "Warenfläche", "farbe": "#f08a24" },
-    { "id": "Z3", "name": "Genre-Wand Neuware", "rechteck": [0, 1.2, 2.5, 11.5], "typ": "Warenfläche", "farbe": "#f2c230" },
-    { "id": "Z4", "name": "Second-Hand „Digging“", "rechteck": [4.2, 8.2, 6.5, 10.8], "typ": "Warenfläche", "farbe": "#8b5a2b" },
-    { "id": "Z5", "name": "Listening Bar", "rechteck": [4.5, 12, 11.8, 15], "typ": "Kundenfläche (Aufenthalt)", "farbe": "#1f7a7a" },
-    { "id": "Z6", "name": "Hardware & Beratung", "rechteck": [10, 12, 4.8, 10.5], "typ": "Beratungszone", "farbe": "#2f6fd6" },
-    { "id": "Z7", "name": "Kasse & Zubehör", "rechteck": [7, 12, 0, 4.5], "typ": "sonstige Fläche + Impulsware", "farbe": "#8a4fc7" },
-    { "id": "Z8", "name": "Lager / Backoffice", "rechteck": [0, 4.5, 12, 15], "typ": "sonstige Fläche (nicht begehbar)", "farbe": "#4a4a4f" }
+    {
+      "id": "Z1",
+      "name": "Eingangszone",
+      "rechteck": [0, 7, 0, 2.5],
+      "typ": "Kundenfläche",
+      "farbe": "#c9c9c9",
+      "licht": { "kelvin": 3500, "staerke": 1, "leuchte": "panel", "abstand": 2.2, "lichtquellen": 1 },
+      "boden": "beton"
+    },
+    {
+      "id": "Z2",
+      "name": "Neuheiten & Charts",
+      "rechteck": [2.8, 7.5, 2.5, 6.5],
+      "typ": "Warenfläche",
+      "farbe": "#f08a24",
+      "licht": { "kelvin": 3200, "staerke": 1.1, "leuchte": "strahler", "abstand": 1.6, "lichtquellen": 1 },
+      "boden": "holz"
+    },
+    {
+      "id": "Z3",
+      "name": "Genre-Wand Neuware",
+      "rechteck": [0, 1.2, 2.5, 11.5],
+      "typ": "Warenfläche",
+      "farbe": "#f2c230",
+      "licht": { "kelvin": 3200, "staerke": 0.9, "leuchte": "strahler", "abstand": 1.5, "lichtquellen": 2 },
+      "boden": "holz"
+    },
+    {
+      "id": "Z4",
+      "name": "Second-Hand „Digging“",
+      "rechteck": [4.2, 8.2, 6.5, 10.8],
+      "typ": "Warenfläche",
+      "farbe": "#8b5a2b",
+      "licht": { "kelvin": 2700, "staerke": 1.1, "leuchte": "pendel", "abstand": 2, "lichtquellen": 1 },
+      "boden": "holz"
+    },
+    {
+      "id": "Z5",
+      "name": "Listening Bar",
+      "rechteck": [4.5, 12, 11.8, 15],
+      "typ": "Kundenfläche (Aufenthalt)",
+      "farbe": "#1f7a7a",
+      "licht": { "kelvin": 2700, "staerke": 1, "leuchte": "pendel", "abstand": 1.9, "lichtquellen": 2 },
+      "boden": "beton"
+    },
+    {
+      "id": "Z6",
+      "name": "Hardware & Beratung",
+      "rechteck": [10, 12, 4.8, 10.5],
+      "typ": "Beratungszone",
+      "farbe": "#2f6fd6",
+      "licht": { "kelvin": 4000, "staerke": 1.3, "leuchte": "panel", "abstand": 1.6, "lichtquellen": 1 },
+      "boden": "holz"
+    },
+    {
+      "id": "Z7",
+      "name": "Kasse & Zubehör",
+      "rechteck": [7, 12, 0, 4.5],
+      "typ": "sonstige Fläche + Impulsware",
+      "farbe": "#8a4fc7",
+      "licht": { "kelvin": 3500, "staerke": 1, "leuchte": "panel", "abstand": 2, "lichtquellen": 1 },
+      "boden": "beton"
+    },
+    { "id": "Z8", "name": "Lager / Backoffice", "rechteck": [0, 4.5, 12, 15], "typ": "sonstige Fläche (nicht begehbar)", "farbe": "#4a4a4f", "boden": "beton" }
   ],
   "moebel": [
     { "id": "M1", "name": "Schaufenster-Display", "typ": "schaufenster-display", "rechteck": [4, 7.5, 0.3, 1], "hoehe": 1.2, "schild": "Album der Woche" },
@@ -78,6 +134,30 @@
     ]
   },
   "cover_farben": ["#7d5a50", "#b4846c", "#e5b299", "#5b6d5b", "#8e9775", "#4a6670", "#6d8299", "#3d405b", "#81667a", "#a26769", "#c9ada7", "#2f4550", "#b08d57", "#586f7c", "#9c6644", "#6b705c", "#a5a58d", "#355070", "#6d597a", "#b56576"],
+  "beleuchtung": {
+    "_hinweis": "kelvin = Farbtemperatur (2700 warm, 4000 neutral), staerke = Helligkeitsfaktor. Licht je Zone steht bei den Zonen.",
+    "grundlicht": { "himmel": "#fff4e8", "boden": "#4a4540", "staerke": 0.9 },
+    "spots": [
+      { "name": "Schaufenster M1", "von": [5.75, 3.1, 2], "auf": [5.75, 0.6, 0.65], "kelvin": 3000, "staerke": 40, "winkel": 38 },
+      { "name": "Genre-Wand Sichtzone vorn", "von": [1.9, 3.1, 4], "auf": [0.3, 1.5, 4], "kelvin": 3000, "staerke": 22, "winkel": 42 },
+      { "name": "Genre-Wand Sichtzone Mitte", "von": [1.9, 3.1, 7], "auf": [0.3, 1.5, 7], "kelvin": 3000, "staerke": 22, "winkel": 42 },
+      { "name": "Genre-Wand Sichtzone hinten", "von": [1.9, 3.1, 10], "auf": [0.3, 1.5, 10], "kelvin": 3000, "staerke": 22, "winkel": 42 }
+    ]
+  },
+  "materialien": {
+    "_hinweis": "Farben der Oberflächen. Böden je Zone stehen bei den Zonen (holz/beton).",
+    "wand": "#34353a",
+    "decke": "#232326",
+    "akzent": "#e8772e",
+    "beton": "#8f8b86",
+    "holz": "#9a6a42",
+    "filz": "#2f4a4c",
+    "akzentstreifen_hoehe": 2.6,
+    "filz_paneele": [
+      { "wand": "rueck", "von": 4.7, "bis": 10.6, "unten": 1.95, "oben": 3 },
+      { "wand": "rechts", "von": 11.9, "bis": 14.9, "unten": 1.2, "oben": 3 }
+    ]
+  },
   "start": {
     "position": [2.5, 0.6],
     "blickrichtung_grad": 0,

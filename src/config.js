@@ -23,6 +23,8 @@ export default {
     maxPixelRatio: 1.5,
     antialias: true,
     fov: 70,
+    // true = weniger Lichtquellen, keine Spots (falls das iPad unter 60 fps fällt). Auch per URL: ?licht=einfach
+    lichtEinfach: false,
   },
 
   // FPS-Anzeige oben links (per URL ?fps=0 abschaltbar)
