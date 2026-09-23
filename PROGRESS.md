@@ -85,6 +85,10 @@
 - Lo-Fi-Musik (optional laut SPEC): synthetisch per Web Audio (Rhodes-Akkorde Dm9–G13–Cmaj9–Am9, Bass, Beat, Vinyl-Knistern), räumlich aus den 3 Hörstationen, an/aus mit L2 / M / „Musik“. Auf dem iPad funktioniert sie auch bei Stummschalter (iOS 17+).
 - README mit vollständiger Steuerung, Präsentationsablauf, Offline-Nutzung und Anleitung zum Ändern von `layout.json`.
 
+## Fix – flimmernder Akzentstreifen an der Zubehör-Gondel
+- Oranger Abschluss lag bündig auf der Mittelwand (oben und an beiden Enden) → Z-Fighting.
+- Gleiches Muster auch an Genre-Wand und Hardware-Wand behoben (Rückwand/Sockel gegen Seitenteile, Abschluss oben). Regel im Code: Teile aus verschiedenen Materialien bekommen 5 mm Versatz (`E` in `furniture.js`).
+
 ## Offen / Ideen
 - Test mit echtem PS5-Controller am iPad (Options/Create könnten von iPadOS abgefangen werden – dann Tasten umlegen).
 - Kamerapositionen der Stationen nach Probelauf feinjustieren (`layout.json` → `stationen[].kamera`).
