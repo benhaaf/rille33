@@ -27,6 +27,8 @@ const G = {
 };
 
 const Y_AXIS_TO_X = Math.PI / 2; // roll: Zylinderachse von y nach x drehen
+// Kleiner Versatz, damit sich Flächen verschiedener Materialien nie exakt überdecken (sonst Z-Fighting/Flimmern)
+const E = 0.005;
 
 // Plattenspieler, Front zeigt in Richtung (dx, dz)
 function turntable(b, x, y, z, [dx, dz], plinth = 'holz') {
@@ -120,8 +122,8 @@ const BUILDERS = {
     const segs = m.segmente;
     const L = (z2 - z1) / segs.length;
     const depth = x2 - x1;
-    b.box('korpus', [x1, x1 + 0.04, z1, z2], 0, H); // Rückwand
-    b.box('holz', [x1, x2 + 0.02, z1, z2], H - 0.04, H); // Abschluss oben
+    b.box('korpus', [x1, x1 + 0.04, z1 + E, z2 - E], 0, H - 0.04); // Rückwand (eingerückt → kein Flimmern)
+    b.box('holz', [x1, x2 + 0.02, z1 - E, z2 + E], H - 0.04, H + E); // Abschluss oben
     for (let i = 0; i <= segs.length; i++) {
       const z = z1 + i * L;
       b.box('holz', [x1, x2, Math.max(z1, z - 0.015), Math.min(z2, z + 0.015)], 0, H);
@@ -258,9 +260,9 @@ const BUILDERS = {
     const H = m.hoehe;
     const brands = m.marken;
     const L = (z2 - z1) / brands.length;
-    b.box('korpus', [x2 - 0.05, x2, z1, z2], 0, H);
-    b.box('korpus', [x1, x2, z1, z2], 0, 0.1);
-    b.box('holz', [x1, x2, z1, z2], H - 0.04, H);
+    b.box('korpus', [x2 - 0.05, x2, z1 + E, z2 - E], 0, H - 0.04);
+    b.box('korpus', [x1 + E, x2 - E, z1 + E, z2 - E], 0, 0.1);
+    b.box('holz', [x1 - E, x2, z1 - E, z2 + E], H - 0.04, H + E);
     for (let i = 0; i <= brands.length; i++) {
       const z = z1 + i * L;
       b.box('holz', [x1, x2, Math.max(z1, z - 0.015), Math.min(z2, z + 0.015)], 0, H);
@@ -319,7 +321,7 @@ const BUILDERS = {
     const xm = (x1 + x2) / 2;
     b.box('korpus', [x1 + 0.05, x2 - 0.05, z1 + 0.05, z2 - 0.05], 0, 0.1);
     b.box('korpus', [xm - 0.03, xm + 0.03, z1, z2], 0, H);
-    b.box('akzent', [xm - 0.035, xm + 0.035, z1, z2], H - 0.04, H);
+    b.box('akzent', [xm - 0.035, xm + 0.035, z1 - E, z2 + E], H - 0.04, H + E); // größer als die Mittelwand → kein Flimmern
     const item = G.box(1, 1, 1);
     const itemMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8 });
     const colors = ['#e8e4dc', '#e8e4dc', '#1c1c1f', '#d9c7a1', '#e8772e', '#3d405b', '#6b705c'];
