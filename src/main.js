@@ -10,6 +10,8 @@ import { buildFloors, buildWallDetails } from './scene/surfaces.js';
 import { buildPaths } from './scene/paths.js';
 import { TopView } from './topview.js';
 import { ExportDialog } from './exportDialog.js';
+import { Panels } from './panels.js';
+import { Presentation } from './presentation.js';
 import { Collider } from './collision.js';
 import { Player } from './player.js';
 import { ActionBus, ACTIONS } from './input/actions.js';
@@ -108,6 +110,7 @@ function setView(v) {
 
 bus.on('ansicht', () => {
   if (exportDialog.visible) return exportDialog.hide();
+  if (presentation.active) stopPresentation();
   setView(view === 'ego' ? 'top' : 'ego');
   hud.toast(view === 'top' ? 'Draufsicht' : 'Ego-Perspektive', 1200);
 });
@@ -153,16 +156,93 @@ bus.on('png', () => {
   exportDialog.show(url);
 });
 
-// Funktionen, die erst in späteren Etappen kommen, melden sich mit einem Hinweis.
-bus.on('*', (name) => {
-  const a = ACTIONS[name];
-  if (a) hud.toast(`${a.label} – folgt in Etappe ${a.etappe}`);
+// ---------- Etappe 5: Infokarten, Präsentationsmodus, Rahmen ----------
+const panels = new Panels(app, layout);
+const presentation = new Presentation(layout, camera);
+let cardOpenedAt = null; // Position, an der die Infokarte im freien Laufen geöffnet wurde
+
+presentation.onStation = (station, i) => {
+  panels.showCard(station, presentation.total);
+  panels.setIndicator(`${i + 1}/${presentation.total}`);
+};
+
+function startPresentation(i) {
+  if (view === 'top') setView('ego');
+  if (exportDialog.visible) exportDialog.hide();
+  document.body.classList.add('presenting');
+  touch.setActive('praesentation', true);
+  presentation.start(i);
+}
+
+function stopPresentation() {
+  presentation.stop();
+  document.body.classList.remove('presenting');
+  touch.setActive('praesentation', false);
+  panels.hideCard();
+  panels.setIndicator(null);
+  // Laufen dort fortsetzen, wo die Kamera steht (außerhalb des Ladens → Startpunkt)
+  const x = camera.position.x;
+  const z = -camera.position.z;
+  const { breite: W, tiefe: D } = layout.raum;
+  if (x > 0.3 && x < W - 0.3 && z > 0.3 && z < D - 0.3) {
+    const p = collider.resolve(x, z, config.spielerRadius);
+    player.x = p.x;
+    player.z = p.z;
+    const e = new THREE.Euler().setFromQuaternion(camera.quaternion, 'YXZ');
+    player.yaw = -e.y;
+    player.pitch = e.x;
+  } else {
+    player.x = start.position[0];
+    player.z = start.position[1];
+    player.yaw = ((start.blickrichtung_grad || 0) * Math.PI) / 180;
+    player.pitch = 0;
+  }
+  player.apply();
+}
+
+bus.on('praesentation', () => {
+  if (presentation.active) {
+    stopPresentation();
+    hud.toast('Präsentationsmodus beendet', 1400);
+  } else {
+    startPresentation(0);
+  }
+});
+bus.on('weiter', () => (presentation.active ? presentation.next() : startPresentation(0)));
+bus.on('zurueck', () => (presentation.active ? presentation.prev() : startPresentation(presentation.total - 1)));
+
+bus.on('info', () => {
+  if (exportDialog.visible) return exportDialog.hide();
+  if (panels.cardVisible) {
+    panels.hideCard();
+    return;
+  }
+  if (presentation.active) {
+    panels.showCard(presentation.stations[presentation.index], presentation.total);
+    return;
+  }
+  if (view === 'top') {
+    hud.toast('Infokarten: in der Ego-Perspektive auf ein Objekt schauen oder den Präsentationsmodus starten', 3000);
+    return;
+  }
+  const s = presentation.stationInView(camera);
+  if (s) {
+    panels.showCard(s, presentation.total);
+    cardOpenedAt = [player.x, player.z];
+  } else {
+    hud.toast('Kein Objekt mit Infokarte im Blick – näher herangehen oder direkt anschauen', 2400);
+  }
+});
+
+bus.on('rahmen', () => {
+  const on = panels.toggleRahmen();
+  touch.setActive('rahmen', on);
 });
 
 setupPWA((t) => hud.toast(t, 4000));
 
 // Diagnose in der Browser-Konsole: ?debug → window.rille
-if (new URLSearchParams(location.search).has('debug')) window.rille = { renderer, scene, camera, player, topView, bus };
+if (new URLSearchParams(location.search).has('debug')) window.rille = { renderer, scene, camera, player, topView, bus, presentation };
 
 // Größe
 function resize() {
@@ -211,7 +291,16 @@ renderer.setAnimationLoop(() => {
 
   paths.update(dt);
   if (view === 'ego') {
-    player.update(dt, move, look, sprint);
+    if (presentation.active) {
+      presentation.update(dt);
+    } else {
+      player.update(dt, move, look, sprint);
+      // Infokarte aus dem freien Laufen schließt sich, wenn man weitergeht
+      if (cardOpenedAt && panels.cardVisible && Math.hypot(player.x - cardOpenedAt[0], player.z - cardOpenedAt[1]) > 2.5) {
+        panels.hideCard();
+        cardOpenedAt = null;
+      }
+    }
     renderer.render(scene, camera);
   } else {
     renderer.render(scene, topView.camera);
