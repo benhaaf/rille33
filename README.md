@@ -15,7 +15,7 @@ Uni-Projekt (BWL Handel, Store Layout, DHBW Heilbronn): begehbarer 3D-Prototyp e
 | Ego ↔ Draufsicht | Dreieck | T | „Ansicht“ |
 | Hauptweg ein/aus | Kreis | H | „Weg“ |
 | Zonen & Beschriftungen ein/aus | Quadrat | Z | „Zonen“ |
-| Infokarte zum Objekt im Blick | X | E | „Info“ |
+| Infokarte zum Objekt im Blick / Schublade oder Tür im Fadenkreuz öffnen | X | E | „Info“ oder Hinweis antippen |
 | Regalzonen-Höhenmarken ein/aus | L3 | R | „Regal“ |
 | Präsentationsmodus ein/aus | Options | P | „Präs.“ |
 | Nächste / vorige Station | R1 / L1 | → / ← | „Weiter“ / „Zurück“ |

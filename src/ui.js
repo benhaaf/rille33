@@ -6,11 +6,16 @@ export class HUD {
     root.insertAdjacentHTML(
       'beforeend',
       `<div id="status"><span id="pad-status">🎮 Taste drücken zum Verbinden</span><span id="fps"></span></div>
-       <div id="toast" role="status" aria-live="polite"></div>`,
+       <div id="toast" role="status" aria-live="polite"></div>
+       <div id="crosshair" hidden></div>
+       <button id="interact-hint" type="button" hidden></button>`,
     );
     this.pad = root.querySelector('#pad-status');
     this.fpsEl = root.querySelector('#fps');
     this.toastEl = root.querySelector('#toast');
+    this.crosshair = root.querySelector('#crosshair');
+    this.hint = root.querySelector('#interact-hint');
+    this.hintKey = null;
     this.frames = 0;
     this.acc = 0;
     const q = new URLSearchParams(location.search).get('fps');
@@ -31,6 +36,17 @@ export class HUD {
       this.frames = 0;
       this.acc = 0;
     }
+  }
+
+  // Fadenkreuz + Hinweis „X / E: Schublade öffnen“ (antippbar)
+  setTarget(visible, target) {
+    this.crosshair.hidden = !visible;
+    this.crosshair.classList.toggle('active', !!target);
+    const key = target ? target.label : null;
+    if (key === this.hintKey) return;
+    this.hintKey = key;
+    this.hint.hidden = !target;
+    if (target) this.hint.innerHTML = `<span class="key">X / E</span> ${target.label}`;
   }
 
   toast(text, ms = 2200) {

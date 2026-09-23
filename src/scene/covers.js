@@ -281,16 +281,18 @@ export class Covers {
     this.items.push({ ...pose, scale: 1, used });
   }
 
-  build() {
-    const im = new THREE.InstancedMesh(this.geo, this.material, this.items.length);
-    im.name = 'Plattencover';
-    const tiles = new Float32Array(this.items.length * 2);
+  // Baut alle gesammelten Cover (oder eine eigene Liste, z. B. den Inhalt der Schubladen) als eine InstancedMesh
+  build(items = this.items, name = 'Plattencover') {
+    const geo = this.geo.clone(); // eigene Geometrie, weil coverTile pro Instanz-Liste gilt
+    const im = new THREE.InstancedMesh(geo, this.material, items.length);
+    im.name = name;
+    const tiles = new Float32Array(items.length * 2);
     const o = new THREE.Object3D();
     const col = new THREE.Color();
-    this.items.forEach((it, i) => {
+    items.forEach((it, i) => {
       o.position.set(it.x, it.y, -it.z);
       o.rotation.set(it.pitch || 0, it.yaw || 0, it.roll || 0, 'YXZ');
-      o.scale.set(it.scale, it.scale, 1);
+      o.scale.set(it.scale || 1, it.scale || 1, 1);
       o.updateMatrix();
       im.setMatrixAt(i, o.matrix);
       const t = Math.floor(this.rand() * GRID * GRID);
@@ -298,7 +300,7 @@ export class Covers {
       tiles[i * 2 + 1] = Math.floor(t / GRID);
       im.setColorAt(i, it.used ? col.setRGB(0.86, 0.82, 0.74) : col.setRGB(1, 1, 1));
     });
-    this.geo.setAttribute('coverTile', new THREE.InstancedBufferAttribute(tiles, 2));
+    geo.setAttribute('coverTile', new THREE.InstancedBufferAttribute(tiles, 2));
     im.instanceMatrix.needsUpdate = true;
     im.instanceColor.needsUpdate = true;
     im.computeBoundingSphere();

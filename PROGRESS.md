@@ -89,6 +89,13 @@
 - Oranger Abschluss lag bündig auf der Mittelwand (oben und an beiden Enden) → Z-Fighting.
 - Gleiches Muster auch an Genre-Wand und Hardware-Wand behoben (Rückwand/Sockel gegen Seitenteile, Abschluss oben). Regel im Code: Teile aus verschiedenen Materialien bekommen 5 mm Versatz (`E` in `furniture.js`).
 
+## Erweiterung – Schubladen, Zubehör, begehbares Lager
+- **Schubladen** (Bückzone der Genre-Wand, 36 Stück): Fadenkreuz in der Bildmitte; schaut man auf eine Schublade, erscheint „X / E Schublade öffnen“ (auf dem iPad den Hinweis antippen). Schublade fährt 40 cm heraus, darin ein Stapel Nachschub-Platten. Alles instanziert (`src/scene/drawers.js`).
+- **Zubehör-Gondel** mit erkennbaren Artikeln und gezeichneten Texturen (`src/scene/accessories.js`): Innenhüllen-Packungen, Schutzhüllen, Reinigungsspray „Vinyl Clean“, Carbon-Plattenbürsten, Slipmats, Ersatznadeln, gefaltete und hängende „Rille 33“-Tote-Bags, Preisschilder an jeder Regalkante, Kopfschild oben.
+- **Lager begehbar** (Abweichung von SPEC Kap. 5 „nicht begehbar“, auf Wunsch): Lagertür öffnet per X / E / Hinweis und schwenkt ins Lager (Kollision folgt dem Türblatt). Innen: zwei Schwerlastregale mit beschrifteten Kartons, Backoffice-Schreibtisch mit Monitor, Ordnern und Bürostuhl, Kartonstapel, neutrales Deckenlicht. Möbel L1–L4 in `layout.json`.
+- „Info“ / X / E: zeigt das Fadenkreuz auf eine Schublade oder Tür, wird diese bedient – sonst wie bisher die Infokarte.
+- Stand: ca. 160 Draw Calls, 44.000 Dreiecke.
+
 ## Offen / Ideen
 - Test mit echtem PS5-Controller am iPad (Options/Create könnten von iPadOS abgefangen werden – dann Tasten umlegen).
 - Kamerapositionen der Stationen nach Probelauf feinjustieren (`layout.json` → `stationen[].kamera`).

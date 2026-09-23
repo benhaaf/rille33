@@ -7,8 +7,18 @@ export class Collider {
     ]);
   }
 
+  // Fügt ein Rechteck hinzu und gibt es zurück – es kann später mit set() verändert werden (z. B. Tür auf/zu)
   add(rect) {
-    this.rects.push(rect);
+    const r = [Math.min(rect[0], rect[1]), Math.max(rect[0], rect[1]), Math.min(rect[2], rect[3]), Math.max(rect[2], rect[3])];
+    this.rects.push(r);
+    return r;
+  }
+
+  set(r, rect) {
+    r[0] = Math.min(rect[0], rect[1]);
+    r[1] = Math.max(rect[0], rect[1]);
+    r[2] = Math.min(rect[2], rect[3]);
+    r[3] = Math.max(rect[2], rect[3]);
   }
 
   // Schiebt einen Kreis (x, z, r) aus allen Rechtecken heraus. Liefert {x, z}.

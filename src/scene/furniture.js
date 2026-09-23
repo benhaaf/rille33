@@ -3,6 +3,8 @@ import * as THREE from 'three';
 import { Builder, yawFacing, rng } from './builder.js';
 import { Covers, COVER } from './covers.js';
 import { signMesh } from './labels.js';
+import { Drawers } from './drawers.js';
+import { AccessoryKit, priceLabel } from './accessories.js';
 
 const std = (color, roughness = 0.8, metalness = 0) => new THREE.MeshStandardMaterial({ color, roughness, metalness });
 
@@ -25,6 +27,8 @@ const G = {
   disc: (r, h, seg = 24) => new THREE.CylinderGeometry(r, r, h, seg),
   box: (w, h, d) => new THREE.BoxGeometry(w, h, d),
 };
+
+const acc = (ctx) => ctx.acc;
 
 const Y_AXIS_TO_X = Math.PI / 2; // roll: Zylinderachse von y nach x drehen
 // Kleiner Versatz, damit sich Flächen verschiedener Materialien nie exakt überdecken (sonst Z-Fighting/Flimmern)
@@ -134,14 +138,13 @@ const BUILDERS = {
       const sw = s2 - s1;
 
       // Bückzone (< 0,6 m): Schubladen mit Nachschub
+      b.box('korpus', [x1 + 0.04, x2 - 0.03, s1, s2], 0, 0.035); // Boden des Schubladenfachs
       for (let row = 0; row < 2; row++) {
         const y0 = 0.04 + row * 0.28;
         for (let k = 0; k < 3; k++) {
           const a = s1 + (k * sw) / 3 + 0.01;
           const e = s1 + ((k + 1) * sw) / 3 - 0.01;
-          b.box('holzHell', [x1 + 0.04, x2 - 0.01, a, e], y0, y0 + 0.26);
-          const zc = (a + e) / 2;
-          b.box('metall', [x2 - 0.01, x2 + 0.01, zc - 0.07, zc + 0.07], y0 + 0.17, y0 + 0.19);
+          ctx.drawers.add({ x1, x2, z1: a, z2: e, y0, y1: y0 + 0.26 }); // öffnenbar (drawers.js)
         }
       }
 
@@ -319,27 +322,131 @@ const BUILDERS = {
     const [x1, x2, z1, z2] = m.rechteck;
     const H = m.hoehe;
     const xm = (x1 + x2) / 2;
+    const acc = ctx.acc;
     b.box('korpus', [x1 + 0.05, x2 - 0.05, z1 + 0.05, z2 - 0.05], 0, 0.1);
     b.box('korpus', [xm - 0.03, xm + 0.03, z1, z2], 0, H);
     b.box('akzent', [xm - 0.035, xm + 0.035, z1 - E, z2 + E], H - 0.04, H + E); // größer als die Mittelwand → kein Flimmern
-    const item = G.box(1, 1, 1);
-    const itemMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8 });
-    const colors = ['#e8e4dc', '#e8e4dc', '#1c1c1f', '#d9c7a1', '#e8772e', '#3d405b', '#6b705c'];
-    for (const [a, e] of [[x1 + 0.05, xm - 0.03], [xm + 0.03, x2 - 0.05]]) {
-      for (const y of [0.1, 0.45, 0.8, 1.12]) {
-        if (y > 0.1) b.box('holz', [a, e, z1 + 0.02, z2 - 0.02], y - 0.02, y);
-        for (let z = z1 + 0.1; z < z2 - 0.1; ) {
-          const w = 0.08 + ctx.rand() * 0.1;
-          const hh = 0.1 + ctx.rand() * 0.14;
-          const d = (e - a) * (0.6 + ctx.rand() * 0.3);
-          const x = a < xm ? a + d / 2 + 0.02 : e - d / 2 - 0.02;
-          b.instance('zubehoer', item, itemMat, { x, y: y + hh / 2, z: z + w / 2, scale: [d, hh, w], color: colors[Math.floor(ctx.rand() * colors.length)] });
-          z += w + 0.03;
+    // Kopfschild oben auf der Gondel
+    b.box('korpus', [xm - 0.02, xm + 0.02, z1 + 0.3, z2 - 0.3], H + E, H + 0.24);
+    sign(ctx.extra, m.schild, { w: 0.86, h: 0.18, bg: '#1c1c1f', fg: '#e8772e' }, xm + 0.022, H + 0.13, (z1 + z2) / 2, [1, 0]);
+    sign(ctx.extra, m.schild, { w: 0.86, h: 0.18, bg: '#1c1c1f', fg: '#e8772e' }, xm - 0.022, H + 0.13, (z1 + z2) / 2, [-1, 0]);
+
+    const levels = [0.1, 0.45, 0.8, 1.12];
+    const along = (n, pad = 0.18) => Array.from({ length: n }, (_, i) => z1 + pad + ((z2 - z1 - 2 * pad) * i) / Math.max(1, n - 1));
+    // Seite B zeigt zur Kassenschlange (+x), Seite A zu den Neuheiten (-x)
+    const sides = [
+      { dir: [1, 0], a: xm + 0.03, e: x2 - 0.05, items: [
+        ['Schutzhüllen 25 Stk.', '8,90 €', (y, x, d) => along(4).forEach((z) => acc.outerStack(b, x, y, z, 3))],
+        ['Innenhüllen 50 Stk.', '14,90 €', (y, x, d) => along(4).forEach((z) => acc.sleevePack(b, x - 0.04, y, z, d))],
+        ['Reinigungsspray 250 ml', '9,90 €', (y, x, d) => along(6, 0.12).forEach((z) => [-0.08, 0.08].forEach((o) => acc.spray(b, x + o, y, z, d)))],
+        ['Plattenbürste Carbon', '12,90 €', (y, x, d) => along(5, 0.14).forEach((z) => [-0.09, 0.07].forEach((o) => acc.brush(b, x + o, y, z, d)))],
+      ] },
+      { dir: [-1, 0], a: x1 + 0.05, e: xm - 0.03, items: [
+        ['Tote Bag „Rille 33“', '12,00 €', (y, x, d) => along(4).forEach((z) => acc.toteFolded(b, x, y, z, 4))],
+        ['Innenhüllen 50 Stk.', '14,90 €', (y, x, d) => along(4).forEach((z) => acc.sleevePack(b, x + 0.04, y, z, d))],
+        ['Ersatznadel Diamant', '29,90 €', (y, x, d) => along(8, 0.1).forEach((z) => [-0.07, 0.07].forEach((o) => acc.stylus(b, x + o, y, z, d)))],
+        ['Slipmat Filz', '14,90 €', (y, x, d) => along(4).forEach((z, i) => acc.slipmat(b, x + 0.03, y, z, d, i % 2))],
+      ] },
+    ];
+    for (const side of sides) {
+      const x = (side.a + side.e) / 2;
+      const front = side.dir[0] > 0 ? side.e : side.a;
+      side.items.forEach(([name, price, place], li) => {
+        const y = levels[li];
+        if (y > 0.1) b.box('holz', [side.a, side.e, z1 + 0.02, z2 - 0.02], y - 0.02, y);
+        place(y, x, side.dir);
+        // Preisschild an der Regalkante
+        const label = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.0625), priceLabel(name, price));
+        label.position.set(front + side.dir[0] * 0.004, y - (y > 0.1 ? 0.05 : 0.03), -(z1 + z2) / 2);
+        label.rotation.y = yawFacing(...side.dir);
+        ctx.extra.add(label);
+      });
+    }
+    // Stirnseiten: Tote Bags an Haken (Stirnseite bei z1 zeigt zur Kasse)
+    for (const [z, dz] of [[z1, -1], [z2, 1]]) {
+      for (const ox of [-0.22, 0.22]) acc.toteHanging(b, xm + ox, 1.32, z, [0, dz]);
+    }
+  },
+
+  lagerregal(b, m, ctx) {
+    const [x1, x2, z1, z2] = m.rechteck;
+    const H = m.hoehe;
+    const alongX = x2 - x1 >= z2 - z1;
+    // Front zeigt zur Raummitte des Lagers
+    const zone = ctx.layout.zonen.find((z) => z.rechteck[0] <= (x1 + x2) / 2 && (x1 + x2) / 2 <= z.rechteck[1] && z.rechteck[2] <= (z1 + z2) / 2 && (z1 + z2) / 2 <= z.rechteck[3]);
+    const [cx, cz] = zone ? [(zone.rechteck[0] + zone.rechteck[1]) / 2, (zone.rechteck[2] + zone.rechteck[3]) / 2] : [6, 7.5];
+    const dir = alongX ? [0, cz > (z1 + z2) / 2 ? 1 : -1] : [cx > (x1 + x2) / 2 ? 1 : -1, 0];
+    const t = 0.035;
+    for (const x of [x1, x2 - t]) for (const z of [z1, z2 - t]) b.box('metall', [x, x + t, z, z + t], 0, H);
+    // Zwischenstützen bei langen Regalen
+    const len = alongX ? x2 - x1 : z2 - z1;
+    const bays = Math.max(1, Math.round(len / 1.05));
+    for (let i = 1; i < bays; i++) {
+      const p = (alongX ? x1 : z1) + (len * i) / bays;
+      if (alongX) for (const z of [z1, z2 - t]) b.box('metall', [p - t / 2, p + t / 2, z, z + t], 0, H);
+      else for (const x of [x1, x2 - t]) b.box('metall', [x, x + t, p - t / 2, p + t / 2], 0, H);
+    }
+    const shelves = [0.08, 0.62, 1.16, 1.7, H - 0.02];
+    const labels = m.kartons || ['LAGER'];
+    let n = 0;
+    shelves.forEach((y, si) => {
+      b.box('metall', [x1, x2, z1, z2], y - 0.02, y);
+      if (si === shelves.length - 1) return;
+      const depth = (alongX ? z2 - z1 : x2 - x1) - 0.06;
+      const perBay = 2;
+      for (let bay = 0; bay < bays; bay++) {
+        for (let k = 0; k < perBay; k++) {
+          if (ctx.rand() < 0.15) continue; // Lücken wirken echter
+          const f = (bay + (k + 0.5) / perBay) / bays;
+          const w = len / bays / perBay - 0.06;
+          const h = 0.3 + ctx.rand() * 0.14;
+          const px = alongX ? x1 + f * len : (x1 + x2) / 2;
+          const pz = alongX ? (z1 + z2) / 2 : z1 + f * len;
+          acc(ctx).carton(b, labels[n++ % labels.length], px, y, pz, dir, [w, Math.min(h, 0.46), Math.min(depth, 0.42)]);
         }
       }
+    });
+  },
+
+  schreibtisch(b, m, ctx) {
+    const [x1, x2, z1, z2] = m.rechteck;
+    const h = m.hoehe;
+    tableLegs(b, m.rechteck, h - 0.03);
+    b.box('holzHell', [x1, x2, z1, z2], h - 0.03, h);
+    const xc = (x1 + x2) / 2;
+    // Schreibtisch steht an der Wand (z1), Stuhl auf der Raumseite (z2)
+    b.geo('schwarz', G.box(0.56, 0.34, 0.03), xc, h + 0.3, z1 + 0.2, Math.PI);
+    b.geo('bildschirm', G.box(0.52, 0.3, 0.005), xc, h + 0.3, z1 + 0.218, Math.PI);
+    b.box('metall', [xc - 0.03, xc + 0.03, z1 + 0.16, z1 + 0.2], h, h + 0.14);
+    b.box('metall', [xc - 0.12, xc + 0.12, z1 + 0.1, z1 + 0.26], h, h + 0.01);
+    b.box('schwarz', [xc - 0.22, xc + 0.22, z1 + 0.38, z1 + 0.52], h, h + 0.02); // Tastatur
+    b.box('weiss', [x1 + 0.1, x1 + 0.4, z1 + 0.3, z1 + 0.6], h, h + 0.01); // Lieferscheine
+    // Ordner
+    const binder = ['#2f5d8a', '#e8772e', '#3d405b', '#5b6d5b'];
+    binder.forEach((c, i) => {
+      const key = `ordner-${i}`;
+      if (!b.materials[key]) b.materials[key] = std(new THREE.Color(c), 0.7);
+      b.box(key, [x2 - 0.35 + i * 0.07, x2 - 0.29 + i * 0.07, z1 + 0.05, z1 + 0.33], h, h + 0.32);
+    });
+    // Bürostuhl
+    const cz = z2 + 0.38;
+    b.geo('metall', G.disc(0.26, 0.03, 5), xc, 0.05, cz);
+    b.geo('metall', G.disc(0.03, 0.42, 10), xc, 0.26, cz);
+    b.box('korpus', [xc - 0.23, xc + 0.23, cz - 0.23, cz + 0.23], 0.46, 0.53);
+    b.box('korpus', [xc - 0.22, xc + 0.22, cz + 0.2, cz + 0.25], 0.55, 1.05);
+  },
+
+  kartonstapel(b, m, ctx) {
+    const [x1, x2, z1, z2] = m.rechteck;
+    const labels = ['VERSAND', 'RETOURE', 'NEUWARE', 'VERSAND'];
+    const w = (x2 - x1) / 2 - 0.02;
+    let n = 0;
+    for (let level = 0; level < 3; level++) {
+      for (let i = 0; i < 2; i++) {
+        if (level === 2 && i === 1) continue;
+        acc(ctx).carton(b, labels[n++ % labels.length], x1 + w / 2 + 0.01 + i * (w + 0.02), level * 0.34, (z1 + z2) / 2, [0, -1], [w, 0.33, z2 - z1 - 0.05]);
+      }
     }
-    sign(ctx.extra, m.schild, { w: 0.9, h: 0.16, bg: '#1c1c1f', fg: '#e8772e' }, xm + 0.032, 1.3, (z1 + z2) / 2, [1, 0]);
-    sign(ctx.extra, m.schild, { w: 0.9, h: 0.16, bg: '#1c1c1f', fg: '#e8772e' }, xm - 0.032, 1.3, (z1 + z2) / 2, [-1, 0]);
   },
 };
 
@@ -357,7 +464,8 @@ export function footprints(m) {
 export function buildFurniture(layout) {
   const rand = rng(33);
   const b = new Builder({ ...MATERIALS });
-  const ctx = { rand, covers: new Covers(layout.cover_farben, rand), extra: b.extra };
+  const covers = new Covers(layout.cover_farben, rand);
+  const ctx = { rand, covers, extra: b.extra, layout, acc: new AccessoryKit(), drawers: new Drawers(MATERIALS, covers) };
   const colliders = [];
   for (const m of layout.moebel) {
     const fn = BUILDERS[m.typ];
@@ -373,5 +481,6 @@ export function buildFurniture(layout) {
   if (bar) colliders.push([bar.rechteck[0], bar.rechteck[1], 14.6, 15]);
   const group = b.build('Möbel');
   group.add(ctx.covers.build());
-  return { group, colliders };
+  group.add(ctx.drawers.build());
+  return { group, colliders, drawers: ctx.drawers };
 }

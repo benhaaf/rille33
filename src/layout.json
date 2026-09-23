@@ -23,8 +23,7 @@
     { "id": "lager-front", "name": "Lagerwand", "von": [0, 12], "bis": [4.5, 12], "hoehe": 3.2 }
   ],
   "sperrflaechen": [
-    { "id": "notausgang-frei", "name": "Notausgang freihalten", "rechteck": [10.8, 11.8, 13.8, 15], "darstellung": "schraffur-rot" },
-    { "id": "lager", "name": "Lager / Backoffice", "rechteck": [0, 4.5, 12, 15], "darstellung": "keine" }
+    { "id": "notausgang-frei", "name": "Notausgang freihalten", "rechteck": [10.8, 11.8, 13.8, 15], "darstellung": "schraffur-rot" }
   ],
   "zonen": [
     {
@@ -101,10 +100,11 @@
       "id": "Z8",
       "name": "Lager / Backoffice",
       "rechteck": [0, 4.5, 12, 15],
-      "typ": "sonstige Fläche (nicht begehbar)",
+      "typ": "sonstige Fläche (nur Personal)",
       "farbe": "#4a4a4f",
       "boden": "beton",
-      "beschriftung": { "x": 2.25, "z": 13.5 }
+      "beschriftung": { "x": 2.25, "z": 13.5 },
+      "licht": { "kelvin": 4000, "staerke": 0.9, "leuchte": "panel", "abstand": 2, "lichtquellen": 1 }
     }
   ],
   "moebel": [
@@ -137,7 +137,25 @@
     },
     { "id": "M10", "name": "Beratungstisch", "typ": "beratungstisch", "rechteck": [10.2, 11, 6.5, 8], "hoehe": 0.9 },
     { "id": "M11", "name": "Kassentheke", "typ": "kasse", "rechteck": [9, 11.5, 2, 2.8], "hoehe": 1 },
-    { "id": "M12", "name": "Zubehör-Gondel", "typ": "gondel", "rechteck": [7, 8, 3, 4.5], "hoehe": 1.4, "schild": "Zubehör" }
+    { "id": "M12", "name": "Zubehör-Gondel", "typ": "gondel", "rechteck": [7, 8, 3, 4.5], "hoehe": 1.4, "schild": "Zubehör" },
+    {
+      "id": "L1",
+      "name": "Lagerregal Rückwand",
+      "typ": "lagerregal",
+      "rechteck": [0.15, 3.3, 14.45, 14.95],
+      "hoehe": 2.2,
+      "kartons": ["NEUWARE A–K", "NEUWARE L–Z", "SECOND-HAND", "ZUBEHÖR", "RETOUREN", "VORBESTELLT"]
+    },
+    {
+      "id": "L2",
+      "name": "Lagerregal Seitenwand",
+      "typ": "lagerregal",
+      "rechteck": [0.05, 0.55, 12.15, 14.3],
+      "hoehe": 2.2,
+      "kartons": ["SECOND-HAND", "ANKAUF", "HÜLLEN", "MERCH"]
+    },
+    { "id": "L3", "name": "Backoffice-Schreibtisch", "typ": "schreibtisch", "rechteck": [1.6, 3.1, 12.1, 12.8], "hoehe": 0.75 },
+    { "id": "L4", "name": "Kartonstapel", "typ": "kartonstapel", "rechteck": [3.6, 4.35, 14.3, 14.95], "hoehe": 1 }
   ],
   "regalzonen": {
     "_hinweis": "Höhenbereiche an der Genre-Wand (M4) in Metern",
