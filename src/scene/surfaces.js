@@ -106,7 +106,9 @@ export function buildFloors(layout) {
     group.add(m);
   };
 
-  add('beton', [0, W, 0, D], 0);
+  // Grundboden reicht unter die Wände, damit unter Türen kein Spalt zum Himmel entsteht
+  const t = layout.raum.wandstaerke;
+  add('beton', [-t, W + t, -t, D + t], 0);
   layout.zonen.forEach((z, i) => {
     if (z.boden === 'holz') add('holz', z.rechteck, 0.002 + i * 0.0003);
   });

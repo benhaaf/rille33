@@ -87,7 +87,9 @@ export function buildLighting(layout, scene) {
     }
 
     const gm = glowMat(L.kelvin);
-    const pts = grid(z.rechteck, L.abstand);
+    // Keine Leuchten über Sperrflächen (z. B. vor dem Notausgang-Schild)
+    const blocked = (layout.sperrflaechen || []).map((sp) => sp.rechteck);
+    const pts = grid(z.rechteck, L.abstand).filter(([x, zz]) => !blocked.some(([a, b, c, d]) => x > a - 0.3 && x < b + 0.3 && zz > c - 0.3 && zz < d + 0.3));
     if (L.leuchte === 'pendel') {
       for (const [x, zz] of pts) {
         const y = 2.35;

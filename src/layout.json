@@ -18,7 +18,7 @@
       "von": [4.5, 12],
       "bis": [4.5, 15],
       "hoehe": 3.2,
-      "tuer": { "von": 13, "bis": 14, "hoehe": 2.1 }
+      "tuer": { "von": 13, "bis": 14, "hoehe": 2.1, "schild": "LAGER\nNur Personal" }
     },
     { "id": "lager-front", "name": "Lagerwand", "von": [0, 12], "bis": [4.5, 12], "hoehe": 3.2 }
   ],
