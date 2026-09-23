@@ -199,7 +199,7 @@ const BUILDERS = {
         for (let k = 0; k < count; k++) {
           const x = dir < 0 ? e - 0.05 - k * 0.022 : a + 0.05 + k * 0.022;
           if (x < a + 0.03 || x > e - 0.03) break;
-          ctx.covers.record(b, { x, y: base + 0.02 + COVER / 2, z: zc, yaw: yawFacing(dir, 0), pitch: -0.2 + (ctx.rand() - 0.5) * 0.06 });
+          ctx.covers.record(b, { x, y: base + 0.02 + COVER / 2, z: zc, yaw: yawFacing(dir, 0), pitch: -0.2 + (ctx.rand() - 0.5) * 0.06 }, true);
         }
       }
     }
@@ -368,5 +368,7 @@ export function buildFurniture(layout) {
   // Rückbuffet der Bar steht an der Wand
   const bar = layout.moebel.find((m) => m.typ === 'bar');
   if (bar) colliders.push([bar.rechteck[0], bar.rechteck[1], 14.6, 15]);
-  return { group: b.build('Möbel'), colliders };
+  const group = b.build('Möbel');
+  group.add(ctx.covers.build());
+  return { group, colliders };
 }

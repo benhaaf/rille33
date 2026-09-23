@@ -19,6 +19,12 @@ export function buildZones(layout) {
   toThree(W / 2, 0.01, D / 2, grid.position);
   group.add(grid);
 
+  // 3D-Beschriftungen (in der Draufsicht übernimmt das 2D-Overlay)
+  const labels = new THREE.Group();
+  labels.name = 'Beschriftungen';
+  group.add(labels);
+  group.userData.labels = labels;
+
   layout.zonen.forEach((z, i) => {
     const [x1, x2, z1, z2] = z.rechteck;
     const w = x2 - x1;
@@ -44,7 +50,7 @@ export function buildZones(layout) {
 
     const label = textSprite([`${z.id} · ${z.name}`, z.typ], { height: 0.34, accent: z.farbe });
     toThree(x1 + w / 2, 2.95, z1 + d / 2, label.position);
-    group.add(label);
+    labels.add(label);
   });
 
   // Möbel-IDs
@@ -53,7 +59,7 @@ export function buildZones(layout) {
     const label = textSprite(m.id, { height: 0.17, bg: 'rgba(232,119,46,0.92)', fg: '#1c1c1f' });
     const cx = m.stationen ? m.stationen[Math.floor(m.stationen.length / 2)][0] : (x1 + x2) / 2;
     toThree(cx, m.hoehe + 0.2, (z1 + z2) / 2, label.position);
-    group.add(label);
+    labels.add(label);
   }
   return group;
 }

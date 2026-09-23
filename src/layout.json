@@ -34,7 +34,8 @@
       "typ": "Kundenfläche",
       "farbe": "#c9c9c9",
       "licht": { "kelvin": 3500, "staerke": 1, "leuchte": "panel", "abstand": 2.2, "lichtquellen": 1 },
-      "boden": "beton"
+      "boden": "beton",
+      "beschriftung": { "x": 1.6, "z": 1 }
     },
     {
       "id": "Z2",
@@ -43,7 +44,8 @@
       "typ": "Warenfläche",
       "farbe": "#f08a24",
       "licht": { "kelvin": 3200, "staerke": 1.1, "leuchte": "strahler", "abstand": 1.6, "lichtquellen": 1 },
-      "boden": "holz"
+      "boden": "holz",
+      "beschriftung": { "x": 5, "z": 4.5 }
     },
     {
       "id": "Z3",
@@ -52,7 +54,8 @@
       "typ": "Warenfläche",
       "farbe": "#f2c230",
       "licht": { "kelvin": 3200, "staerke": 0.9, "leuchte": "strahler", "abstand": 1.5, "lichtquellen": 2 },
-      "boden": "holz"
+      "boden": "holz",
+      "beschriftung": { "x": 0.95, "z": 7, "drehung": 90 }
     },
     {
       "id": "Z4",
@@ -61,7 +64,8 @@
       "typ": "Warenfläche",
       "farbe": "#8b5a2b",
       "licht": { "kelvin": 2700, "staerke": 1.1, "leuchte": "pendel", "abstand": 2, "lichtquellen": 1 },
-      "boden": "holz"
+      "boden": "holz",
+      "beschriftung": { "x": 6.2, "z": 10.35 }
     },
     {
       "id": "Z5",
@@ -70,7 +74,8 @@
       "typ": "Kundenfläche (Aufenthalt)",
       "farbe": "#1f7a7a",
       "licht": { "kelvin": 2700, "staerke": 1, "leuchte": "pendel", "abstand": 1.9, "lichtquellen": 2 },
-      "boden": "beton"
+      "boden": "beton",
+      "beschriftung": { "x": 10.4, "z": 12.9 }
     },
     {
       "id": "Z6",
@@ -79,7 +84,8 @@
       "typ": "Beratungszone",
       "farbe": "#2f6fd6",
       "licht": { "kelvin": 4000, "staerke": 1.3, "leuchte": "panel", "abstand": 1.6, "lichtquellen": 1 },
-      "boden": "holz"
+      "boden": "holz",
+      "beschriftung": { "x": 10.6, "z": 9.6 }
     },
     {
       "id": "Z7",
@@ -88,9 +94,18 @@
       "typ": "sonstige Fläche + Impulsware",
       "farbe": "#8a4fc7",
       "licht": { "kelvin": 3500, "staerke": 1, "leuchte": "panel", "abstand": 2, "lichtquellen": 1 },
-      "boden": "beton"
+      "boden": "beton",
+      "beschriftung": { "x": 9.7, "z": 0.9 }
     },
-    { "id": "Z8", "name": "Lager / Backoffice", "rechteck": [0, 4.5, 12, 15], "typ": "sonstige Fläche (nicht begehbar)", "farbe": "#4a4a4f", "boden": "beton" }
+    {
+      "id": "Z8",
+      "name": "Lager / Backoffice",
+      "rechteck": [0, 4.5, 12, 15],
+      "typ": "sonstige Fläche (nicht begehbar)",
+      "farbe": "#4a4a4f",
+      "boden": "beton",
+      "beschriftung": { "x": 2.25, "z": 13.5 }
+    }
   ],
   "moebel": [
     { "id": "M1", "name": "Schaufenster-Display", "typ": "schaufenster-display", "rechteck": [4, 7.5, 0.3, 1], "hoehe": 1.2, "schild": "Album der Woche" },
@@ -157,6 +172,26 @@
       { "wand": "rueck", "von": 4.7, "bis": 10.6, "unten": 1.95, "oben": 3 },
       { "wand": "rechts", "von": 11.9, "bis": 14.9, "unten": 1.2, "oben": 3 }
     ]
+  },
+  "wege": [
+    {
+      "id": "hauptweg",
+      "name": "Hauptweg",
+      "punkte": [[2.5, 0], [2.2, 3], [2.2, 10.8], [4, 11.3], [9.2, 11.3], [9.2, 4.5], [9.6, 3.4]],
+      "farbe": "#ffb13b",
+      "stil": "linie"
+    },
+    {
+      "id": "sammlerweg",
+      "name": "Sammler-Weg (direkt zu Second-Hand)",
+      "punkte": [[2.5, 0], [3, 2], [3, 6.25], [6.2, 6.25], [6.2, 9.8]],
+      "farbe": "#6fd3e6",
+      "stil": "gestrichelt"
+    }
+  ],
+  "draufsicht": {
+    "titel": "Rille 33 – Plattenladen & Listening Bar",
+    "untertitel": "Draufsicht · 12 × 15 m · 180 m²"
   },
   "start": {
     "position": [2.5, 0.6],

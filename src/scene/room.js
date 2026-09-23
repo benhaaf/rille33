@@ -66,6 +66,7 @@ export function buildRoom(layout) {
   const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(W, D), mat.decke);
   ceiling.rotation.x = Math.PI / 2;
   toThree(W / 2, H, D / 2, ceiling.position);
+  ceiling.name = 'Decke';
   group.add(ceiling);
 
   // Öffnungen ausgestalten
@@ -147,14 +148,17 @@ export function buildRoom(layout) {
   }
 
   // Straße und Gehweg vor dem Laden (durchs Schaufenster sichtbar)
-  group.add(box(mat.gehweg, [-6, W + 6, -4, -t], 0.02, -0.02));
-  group.add(box(mat.strasse, [-30, W + 30, -14, -4], 0.02, -0.12));
+  const outside = new THREE.Group();
+  outside.name = 'Aussen';
+  group.add(outside);
+  outside.add(box(mat.gehweg, [-6, W + 6, -4, -t], 0.02, -0.02));
+  outside.add(box(mat.strasse, [-30, W + 30, -14, -4], 0.02, -0.12));
   // Gegenüberliegende Häuserzeile als einfache Blöcke
   const haus = new THREE.MeshStandardMaterial({ color: 0x55565c, roughness: 1 });
   for (let i = -3; i < 6; i++) {
     const hgt = 7 + ((i * 37) % 5);
-    group.add(box(haus, [i * 5 - 1, i * 5 + 3.6, -22, -16], hgt));
+    outside.add(box(haus, [i * 5 - 1, i * 5 + 3.6, -22, -16], hgt));
   }
 
-  return { group, colliders };
+  return { group, colliders, ceiling, outside };
 }
