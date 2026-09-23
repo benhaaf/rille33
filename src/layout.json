@@ -8,17 +8,76 @@
   },
   "oeffnungen": [
     { "id": "eingang", "name": "Eingang", "wand": "front", "von": 1.5, "bis": 3.5, "hoehe": 2.4, "typ": "tuer" },
-    { "id": "schaufenster", "name": "Schaufenster", "wand": "front", "von": 3.5, "bis": 8.0, "unten": 0.3, "hoehe": 2.8, "typ": "glas" },
+    { "id": "schaufenster", "name": "Schaufenster", "wand": "front", "von": 3.5, "bis": 8, "unten": 0.3, "hoehe": 2.8, "typ": "glas" },
     { "id": "notausgang", "name": "Notausgang", "wand": "rueck", "von": 10.8, "bis": 11.8, "hoehe": 2.2, "typ": "notausgang" }
   ],
   "innenwaende": [
-    { "id": "lager-seite", "name": "Lagerwand", "von": [4.5, 12], "bis": [4.5, 15], "hoehe": 3.2, "tuer": { "von": 13.0, "bis": 14.0, "hoehe": 2.1 } },
+    {
+      "id": "lager-seite",
+      "name": "Lagerwand",
+      "von": [4.5, 12],
+      "bis": [4.5, 15],
+      "hoehe": 3.2,
+      "tuer": { "von": 13, "bis": 14, "hoehe": 2.1 }
+    },
     { "id": "lager-front", "name": "Lagerwand", "von": [0, 12], "bis": [4.5, 12], "hoehe": 3.2 }
   ],
   "sperrflaechen": [
     { "id": "notausgang-frei", "name": "Notausgang freihalten", "rechteck": [10.8, 11.8, 13.8, 15], "darstellung": "schraffur-rot" },
     { "id": "lager", "name": "Lager / Backoffice", "rechteck": [0, 4.5, 12, 15], "darstellung": "keine" }
   ],
+  "zonen": [
+    { "id": "Z1", "name": "Eingangszone", "rechteck": [0, 7, 0, 2.5], "typ": "Kundenfläche", "farbe": "#c9c9c9" },
+    { "id": "Z2", "name": "Neuheiten & Charts", "rechteck": [2.8, 7.5, 2.5, 6.5], "typ": "Warenfläche", "farbe": "#f08a24" },
+    { "id": "Z3", "name": "Genre-Wand Neuware", "rechteck": [0, 1.2, 2.5, 11.5], "typ": "Warenfläche", "farbe": "#f2c230" },
+    { "id": "Z4", "name": "Second-Hand „Digging“", "rechteck": [4.2, 8.2, 6.5, 10.8], "typ": "Warenfläche", "farbe": "#8b5a2b" },
+    { "id": "Z5", "name": "Listening Bar", "rechteck": [4.5, 12, 11.8, 15], "typ": "Kundenfläche (Aufenthalt)", "farbe": "#1f7a7a" },
+    { "id": "Z6", "name": "Hardware & Beratung", "rechteck": [10, 12, 4.8, 10.5], "typ": "Beratungszone", "farbe": "#2f6fd6" },
+    { "id": "Z7", "name": "Kasse & Zubehör", "rechteck": [7, 12, 0, 4.5], "typ": "sonstige Fläche + Impulsware", "farbe": "#8a4fc7" },
+    { "id": "Z8", "name": "Lager / Backoffice", "rechteck": [0, 4.5, 12, 15], "typ": "sonstige Fläche (nicht begehbar)", "farbe": "#4a4a4f" }
+  ],
+  "moebel": [
+    { "id": "M1", "name": "Schaufenster-Display", "typ": "schaufenster-display", "rechteck": [4, 7.5, 0.3, 1], "hoehe": 1.2, "schild": "Album der Woche" },
+    { "id": "M2", "name": "Neuheiten-Tisch 1", "typ": "neuheiten-tisch", "rechteck": [3.5, 6.5, 3, 4], "hoehe": 0.9 },
+    { "id": "M3", "name": "Neuheiten-Tisch 2", "typ": "neuheiten-tisch", "rechteck": [3.5, 6.5, 5, 6], "hoehe": 0.9 },
+    {
+      "id": "M4",
+      "name": "Genre-Wand",
+      "typ": "genre-wand",
+      "rechteck": [0, 0.6, 2.5, 11.5],
+      "hoehe": 2.4,
+      "segmente": ["Rock/Indie", "Hip-Hop", "Pop", "Elektronik", "Jazz/Soul", "Klassik/Soundtrack"]
+    },
+    { "id": "M5", "name": "Digging-Kiste Reihe 1", "typ": "digging-kiste", "rechteck": [4.8, 5.6, 6.5, 10.5], "hoehe": 0.9 },
+    { "id": "M6", "name": "Digging-Kiste Reihe 2", "typ": "digging-kiste", "rechteck": [6.8, 7.6, 6.5, 10.5], "hoehe": 0.9 },
+    { "id": "M7", "name": "Hörstationen", "typ": "hoerstation", "stationen": [[5.8, 12.2], [7.3, 12.2], [8.8, 12.2]], "durchmesser": 0.7, "hoehe": 1.1 },
+    { "id": "M8", "name": "Bar-Theke", "typ": "bar", "rechteck": [6, 10.2, 14.1, 14.7], "hoehe": 1.1, "hocker_z": 13.6, "hocker_x": [6.6, 7.6, 8.6, 9.6] },
+    {
+      "id": "M9",
+      "name": "Hardware-Wand",
+      "typ": "hardware-wand",
+      "rechteck": [11.4, 12, 5, 10],
+      "hoehe": 2.2,
+      "marken": [
+        { "name": "Aurel", "farbe": "#c8a24a" },
+        { "name": "Norda", "farbe": "#5f9ea0" },
+        { "name": "Vinto", "farbe": "#c0504d" }
+      ]
+    },
+    { "id": "M10", "name": "Beratungstisch", "typ": "beratungstisch", "rechteck": [10.2, 11, 6.5, 8], "hoehe": 0.9 },
+    { "id": "M11", "name": "Kassentheke", "typ": "kasse", "rechteck": [9, 11.5, 2, 2.8], "hoehe": 1 },
+    { "id": "M12", "name": "Zubehör-Gondel", "typ": "gondel", "rechteck": [7, 8, 3, 4.5], "hoehe": 1.4, "schild": "Zubehör" }
+  ],
+  "regalzonen": {
+    "_hinweis": "Höhenbereiche an der Genre-Wand (M4) in Metern",
+    "zonen": [
+      { "name": "Reckzone", "von": 1.8, "bis": 2.4, "inhalt": "Genre-Schilder und Deko", "farbe": "#9aa0a6" },
+      { "name": "Sichtzone", "von": 1.2, "bis": 1.8, "inhalt": "Top-Titel frontal", "farbe": "#3fbf7f" },
+      { "name": "Greifzone", "von": 0.6, "bis": 1.2, "inhalt": "Plattenfächer zum Durchblättern", "farbe": "#f2c230" },
+      { "name": "Bückzone", "von": 0, "bis": 0.6, "inhalt": "Schubladen mit Nachschub", "farbe": "#e06c4f" }
+    ]
+  },
+  "cover_farben": ["#7d5a50", "#b4846c", "#e5b299", "#5b6d5b", "#8e9775", "#4a6670", "#6d8299", "#3d405b", "#81667a", "#a26769", "#c9ada7", "#2f4550", "#b08d57", "#586f7c", "#9c6644", "#6b705c", "#a5a58d", "#355070", "#6d597a", "#b56576"],
   "start": {
     "position": [2.5, 0.6],
     "blickrichtung_grad": 0,
