@@ -3,6 +3,8 @@ import './style.css';
 import config from './config.js';
 import layout from './layout.json';
 import { buildRoom } from './scene/room.js';
+import { buildFurniture } from './scene/furniture.js';
+import { buildZones, buildShelfZones } from './scene/zones.js';
 import { Collider } from './collision.js';
 import { Player } from './player.js';
 import { ActionBus, ACTIONS } from './input/actions.js';
@@ -41,8 +43,24 @@ for (const [x, z] of [[3, 4], [9, 4], [3, 10], [9, 10]]) {
 // Raum
 const room = buildRoom(layout);
 scene.add(room.group);
-const collider = new Collider(room.colliders);
-const player = new Player(camera, collider, layout.start);
+const furniture = buildFurniture(layout);
+scene.add(furniture.group);
+const zones = buildZones(layout);
+scene.add(zones);
+const shelfZones = buildShelfZones(layout);
+shelfZones.visible = false;
+scene.add(shelfZones);
+const collider = new Collider([...room.colliders, ...furniture.colliders]);
+// Startpunkt, optional per URL überschreibbar: ?pos=x,z,blickGrad[,neigungGrad]
+const start = { ...layout.start };
+const posParam = new URLSearchParams(location.search).get('pos');
+if (posParam) {
+  const [x, z, deg = 0, tilt = 0] = posParam.split(',').map(Number);
+  Object.assign(start, { position: [x, z], blickrichtung_grad: deg });
+  start.neigung_grad = tilt;
+}
+const player = new Player(camera, collider, start);
+if (start.neigung_grad) player.pitch = (start.neigung_grad * Math.PI) / 180;
 
 // Eingabe
 const hud = new HUD(app);
@@ -52,6 +70,18 @@ gamepad.onStatus = (c) => hud.setPad(c);
 const keyboard = new KeyboardMouseInput(bus, renderer.domElement);
 const touch = new TouchInput(bus, app);
 
+// Ein-/Ausblenden
+function toggle(action, obj, text) {
+  bus.on(action, () => {
+    obj.visible = !obj.visible;
+    touch.setActive(action, obj.visible);
+    hud.toast(`${text} ${obj.visible ? 'eingeblendet' : 'ausgeblendet'}`, 1400);
+  });
+  touch.setActive(action, obj.visible);
+}
+toggle('zonen', zones, 'Zonen & Beschriftungen');
+toggle('regalzonen', shelfZones, 'Regalzonen');
+
 // Funktionen, die erst in späteren Etappen kommen, melden sich mit einem Hinweis.
 bus.on('*', (name) => {
   const a = ACTIONS[name];
@@ -59,6 +89,9 @@ bus.on('*', (name) => {
 });
 
 setupPWA((t) => hud.toast(t, 4000));
+
+// Diagnose in der Browser-Konsole: ?debug → window.rille
+if (new URLSearchParams(location.search).has('debug')) window.rille = { renderer, scene, camera, player };
 
 // Größe
 function resize() {
