@@ -304,3 +304,42 @@ body.presenting #btn-sprint { display: none; }
 .tag-annahme { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-left: 8px; vertical-align: 2px; }
 .rahmen-box footer { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 12px; font-size: 12px; color: #9a958e; }
 @media (max-width: 640px) { .r-row { grid-template-columns: 1fr; gap: 2px; } }
+
+/* Fadenkreuz und Interaktionshinweis */
+#crosshair {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: rgba(244, 241, 236, 0.55);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  z-index: 15;
+  transition: transform 0.15s, background 0.15s;
+}
+#crosshair[hidden] { display: none; }
+#crosshair.active { background: var(--akzent); transform: scale(1.6); }
+#interact-hint {
+  position: fixed;
+  left: 50%;
+  top: calc(50% + 34px);
+  transform: translateX(-50%);
+  z-index: 26;
+  appearance: none;
+  border: 1px solid rgba(232, 119, 46, 0.7);
+  background: rgba(28, 28, 31, 0.85);
+  color: var(--text);
+  font: inherit;
+  font-size: 16px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  touch-action: manipulation;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+#interact-hint[hidden] { display: none; }
+#interact-hint .key { background: var(--akzent); color: #1c1c1f; font-weight: 800; font-size: 12px; padding: 2px 7px; border-radius: 5px; margin-right: 6px; }

@@ -13,6 +13,7 @@ import { ExportDialog } from './exportDialog.js';
 import { Panels } from './panels.js';
 import { Presentation } from './presentation.js';
 import { LofiAudio } from './audio.js';
+import { Interactions } from './interact.js';
 import { Collider } from './collision.js';
 import { Player } from './player.js';
 import { ActionBus, ACTIONS } from './input/actions.js';
@@ -56,6 +57,7 @@ const paths = buildPaths(layout);
 scene.add(paths.group);
 const fixtures = scene.getObjectByName('Leuchten');
 const collider = new Collider([...room.colliders, ...furniture.colliders]);
+const interactions = new Interactions(camera, { drawers: furniture.drawers, doors: room.doors, collider });
 // Startpunkt, optional per URL überschreibbar: ?pos=x,z,blickGrad[,neigungGrad]
 const start = { ...layout.start };
 const posParam = new URLSearchParams(location.search).get('pos');
@@ -212,8 +214,14 @@ bus.on('praesentation', () => {
 bus.on('weiter', () => (presentation.active ? presentation.next() : startPresentation(0)));
 bus.on('zurueck', () => (presentation.active ? presentation.prev() : startPresentation(presentation.total - 1)));
 
+// Schubladen / Tür im Fadenkreuz → X / E öffnet sie; sonst Infokarte
+bus.on('benutzen', () => interactions.interact());
+hud.hint.addEventListener('click', () => bus.emit('benutzen', 'touch'));
+hud.hint.addEventListener('pointerdown', (e) => e.stopPropagation());
+
 bus.on('info', () => {
   if (exportDialog.visible) return exportDialog.hide();
+  if (view === 'ego' && !presentation.active && interactions.interact()) return;
   if (panels.cardVisible) {
     panels.hideCard();
     return;
@@ -261,7 +269,7 @@ bus.on('rahmen', () => {
 setupPWA((t) => hud.toast(t, 4000));
 
 // Diagnose in der Browser-Konsole: ?debug → window.rille
-if (new URLSearchParams(location.search).has('debug')) window.rille = { renderer, scene, camera, player, topView, bus, presentation, audio };
+if (new URLSearchParams(location.search).has('debug')) window.rille = { renderer, scene, camera, player, topView, bus, presentation, audio, interactions };
 
 // Größe
 function resize() {
@@ -309,6 +317,8 @@ renderer.setAnimationLoop(() => {
   const sprint = Math.max(gp.sprint, kb.sprint, tc.sprint);
 
   paths.update(dt);
+  const canInteract = view === 'ego' && !presentation.active && !panels.rahmenVisible;
+  hud.setTarget(canInteract, interactions.update(dt, canInteract));
   if (view === 'ego') {
     if (presentation.active) {
       presentation.update(dt);

@@ -42,6 +42,39 @@ function sign(text, { bg, fg, w, h }) {
   return m;
 }
 
+// Drehtür in einer Innenwand (entlang z bei x = ax). Scharnier bei tuer.von, öffnet in Richtung -x (ins Lager).
+function buildDoor(group, w, ax, half) {
+  const t = w.tuer;
+  const L = t.bis - t.von;
+  const pivot = new THREE.Group();
+  toThree(ax, 0, t.von, pivot.position);
+  const leaf = new THREE.Mesh(unitBox, mat.tuer);
+  leaf.scale.set(half * 1.2, t.hoehe - 0.01, L - 0.01);
+  leaf.position.set(0, (t.hoehe - 0.01) / 2, -L / 2);
+  leaf.name = 'Lagertür';
+  pivot.add(leaf);
+  // Schild und Griff drehen mit (beide Seiten)
+  for (const side of [1, -1]) {
+    const s = sign(t.schild || 'LAGER\nNur Personal', { bg: '#e8772e', fg: '#1c1c1f', w: 0.62, h: 0.34 });
+    s.position.set(side * (half * 0.6 + 0.004), 1.62, -L / 2);
+    s.rotation.y = (side * Math.PI) / 2;
+    pivot.add(s);
+    const handle = new THREE.Mesh(unitBox, mat.akzent);
+    handle.scale.set(0.03, 0.03, 0.14);
+    handle.position.set(side * (half * 0.6 + 0.03), 1.05, -L + 0.12);
+    pivot.add(handle);
+  }
+  group.add(pivot);
+  return {
+    name: 'Lagertür',
+    pivot,
+    leaf,
+    length: L,
+    closedRect: [ax - half, ax + half, t.von, t.bis],
+    openRect: [ax - L, ax, t.von - 0.04, t.von + 0.04],
+  };
+}
+
 export function buildRoom(layout) {
   const { breite: W, tiefe: D, hoehe: H, wandstaerke: t } = layout.raum;
   const M = layout.materialien || {};
@@ -109,22 +142,24 @@ export function buildRoom(layout) {
   });
 
   // Innenwände (Lager)
+  const doors = [];
   for (const w of layout.innenwaende || []) {
     const [ax, az] = w.von;
     const [bx, bz] = w.bis;
     const half = 0.05;
     const openings = w.tuer ? [{ von: w.tuer.von, bis: w.tuer.bis, hoehe: w.tuer.hoehe }] : [];
+    // Kollision: Wandstücke ohne Türöffnung
+    const along = ax === bx ? [Math.min(az, bz), Math.max(az, bz)] : [Math.min(ax, bx), Math.max(ax, bx)];
+    const pieces = w.tuer ? [[along[0], w.tuer.von], [w.tuer.bis, along[1]]] : [along];
+    for (const [p1, p2] of pieces) {
+      if (p2 - p1 < 0.01) continue;
+      colliders.push(ax === bx ? [ax - half, ax + half, p1, p2] : [p1, p2, az - half, az + half]);
+    }
     if (ax === bx) {
-      wallWithOpenings(group, { axis: 'z', from: Math.min(az, bz), to: Math.max(az, bz), a: ax - half, b: ax + half, height: w.hoehe, openings }, mat.wand);
-      if (w.tuer) {
-        group.add(box(mat.tuer, [ax - half * 0.6, ax + half * 0.6, w.tuer.von, w.tuer.bis], w.tuer.hoehe));
-        const s = sign(w.tuer.schild || 'LAGER\nNur Personal', { bg: '#e8772e', fg: '#1c1c1f', w: 0.62, h: 0.34 });
-        toThree(ax + half + 0.012, 1.62, (w.tuer.von + w.tuer.bis) / 2, s.position);
-        s.rotation.y = Math.PI / 2;
-        group.add(s);
-      }
+      wallWithOpenings(group, { axis: 'z', from: along[0], to: along[1], a: ax - half, b: ax + half, height: w.hoehe, openings }, mat.wand);
+      if (w.tuer) doors.push(buildDoor(group, w, ax, half));
     } else {
-      wallWithOpenings(group, { axis: 'x', from: Math.min(ax, bx), to: Math.max(ax, bx), a: az - half, b: az + half, height: w.hoehe, openings }, mat.wand);
+      wallWithOpenings(group, { axis: 'x', from: along[0], to: along[1], a: az - half, b: az + half, height: w.hoehe, openings }, mat.wand);
     }
   }
 
@@ -166,5 +201,5 @@ export function buildRoom(layout) {
     outside.add(box(haus, [i * 5 - 1, i * 5 + 3.6, -22, -16], hgt));
   }
 
-  return { group, colliders, ceiling, outside };
+  return { group, colliders, ceiling, outside, doors };
 }
