@@ -1,0 +1,27 @@
+{
+  "_hinweis": "Alle Maße in Metern. Ursprung = vordere linke Ecke von der Straße aus. x = Breite (0–12), z = Tiefe (0 = Straßenfront, 15 = Rückwand). Rechtecke als [x1, x2, z1, z2].",
+  "raum": {
+    "breite": 12,
+    "tiefe": 15,
+    "hoehe": 3.2,
+    "wandstaerke": 0.2
+  },
+  "oeffnungen": [
+    { "id": "eingang", "name": "Eingang", "wand": "front", "von": 1.5, "bis": 3.5, "hoehe": 2.4, "typ": "tuer" },
+    { "id": "schaufenster", "name": "Schaufenster", "wand": "front", "von": 3.5, "bis": 8.0, "unten": 0.3, "hoehe": 2.8, "typ": "glas" },
+    { "id": "notausgang", "name": "Notausgang", "wand": "rueck", "von": 10.8, "bis": 11.8, "hoehe": 2.2, "typ": "notausgang" }
+  ],
+  "innenwaende": [
+    { "id": "lager-seite", "name": "Lagerwand", "von": [4.5, 12], "bis": [4.5, 15], "hoehe": 3.2, "tuer": { "von": 13.0, "bis": 14.0, "hoehe": 2.1 } },
+    { "id": "lager-front", "name": "Lagerwand", "von": [0, 12], "bis": [4.5, 12], "hoehe": 3.2 }
+  ],
+  "sperrflaechen": [
+    { "id": "notausgang-frei", "name": "Notausgang freihalten", "rechteck": [10.8, 11.8, 13.8, 15], "darstellung": "schraffur-rot" },
+    { "id": "lager", "name": "Lager / Backoffice", "rechteck": [0, 4.5, 12, 15], "darstellung": "keine" }
+  ],
+  "start": {
+    "position": [2.5, 0.6],
+    "blickrichtung_grad": 0,
+    "_blickrichtung": "0 = Blick in den Laden (Richtung Rückwand), 90 = nach rechts"
+  }
+}
