@@ -8,8 +8,8 @@
 | 2 | `layout.json` vollständig: Zonen Z1–Z8, Möbel M1–M12, Plattencover, Regalzonen + Höhenmarken | ✅ fertig |
 | 3 | Licht und Materialien je Zone (aus `layout.json`), Spots, Filz, Holz/Beton | ✅ fertig |
 | 4 | Draufsicht (orthografisch), Hauptweg mit Pfeilen, Sammler-Weg, Legende, Maßstab, PNG-Export (iPad: Teilen-Dialog / neuer Tab) | ✅ fertig |
-| 5 | Infokarten, Präsentationsmodus mit 8 Stationen, Rahmen-Overlay | ⏳ als Nächstes |
-| 6 | Feinschliff: 60 fps auf iPad/Laptop, optional Lo-Fi-Loop, README | offen |
+| 5 | Infokarten, Präsentationsmodus mit 8 Stationen, Rahmen-Overlay | ✅ fertig |
+| 6 | Feinschliff: 60 fps auf iPad/Laptop, optional Lo-Fi-Loop, README | ⏳ als Nächstes |
 
 ## Etappe 1 – erledigt
 - Vite 8 + Three.js, `base: '/rille33/'`, GitHub-Actions-Workflow für Pages.
@@ -60,7 +60,15 @@
 - PNG-Export (R3 / B / „PNG“): 2400 × 1600 px, sieht aus wie die Draufsicht. Vorschau-Dialog mit „Teilen / Sichern“ (Teilen-Dialog des iPads), „Herunterladen“, „In neuem Tab öffnen“, langes Drücken aufs Bild.
 - Ergänzung zur SPEC: PNG-Export auch auf R3 (Controller) und B (Tastatur), weil Kapitel 10 dafür keine Taste vorsieht.
 
-## Als Nächstes (Etappe 5)
-- Infokarten (Entscheidung · Begründung · Quelle · Annahme) für die 8 Stationen, X / E / „Info“ zeigt die Karte zum Objekt im Blick.
-- Präsentationsmodus: Kamera fliegt weich von Station zu Station (R1/L1), Stationsnummer „3/8“.
-- Rahmen-Overlay mit den Eckdaten aus Kapitel 3.
+## Etappe 5 – erledigt
+- `layout.json` → `stationen`: 8 Stationen aus Kap. 9 mit Kameraposition, Blickziel, zugehörigen Objekten und Infokarte (Entscheidung · Begründung · Quelle · Annahme). Texte dort änderbar.
+- Infokarte oben links; „Annahme“ gelb markiert. Im freien Laufen öffnet X / E / „Info“ die Karte zum Objekt im Blick (oder zur Zone, in der man steht); sie schließt sich nach 2,5 m Laufen oder erneutem Drücken.
+- Präsentationsmodus (Options / P / „Präs.“): Kamera fliegt weich von Station zu Station (leichter Bogen über Möbel), R1/L1 bzw. → / ← bzw. „Weiter“/„Zurück“ wie Folien, Karte blendet automatisch ein, „3/8“ unten rechts. Station 1 zeigt das Schaufenster von der Straße aus. Beim Beenden läuft man dort weiter, wo die Kamera steht.
+- R1/L1 außerhalb des Präsentationsmodus starten ihn direkt (bei Station 1 bzw. 8).
+- Rahmen-Overlay (Create / I / „Rahmen“) mit allen Feldern aus Kap. 3, Annahmen gelb markiert (`layout.json` → `rahmen`).
+- Schild „Album der Woche“ hängt jetzt an der Stange, damit es von der Straße aus sichtbar ist.
+
+## Als Nächstes (Etappe 6)
+- Feinschliff nach euren Tests auf dem iPad (fps, Texte, Kamerapositionen der Stationen).
+- Optional: leiser synthetischer Lo-Fi-Loop per Web Audio an den Hörstationen, ein-/ausschaltbar.
+- README mit Tastenbelegung finalisieren, FPS-Anzeige standardmäßig aus.

@@ -27,6 +27,10 @@ Uni-Projekt (BWL Handel, Store Layout, DHBW Heilbronn). Spezifikation: [SPEC.md]
 
 Empfindlichkeit, Deadzone, Tempo und Grafikqualität: `src/config.js`. Store-Daten (Raum, Zonen, Möbel, Regalzonen, Licht, Materialien): `src/layout.json`.
 
+Infokarten, Stationen und Rahmendaten stehen ebenfalls in `src/layout.json` (`stationen`, `rahmen`).
+
+**Präsentation:** Options / P / „Präs.“ startet; R1/L1 (→/←, „Weiter“/„Zurück“) blättern wie Folien; nochmal Options beendet.
+
 URL-Parameter: `?pos=x,z,blickGrad` (Startpunkt), `?fps=0` (FPS-Anzeige aus), `?licht=einfach` (weniger Lichtquellen, falls es ruckelt), `?debug` (`window.rille` in der Konsole).
 
 ## Draufsicht als PNG (für die Folien)

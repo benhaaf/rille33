@@ -86,7 +86,8 @@ const BUILDERS = {
       b.box('chrom', [x - 0.002, x + 0.002, rodZ - 0.002, rodZ + 0.002], y + COVER / 2, m.hoehe - 0.03);
       ctx.covers.front(b, { x, y, z: rodZ, yaw: (r() - 0.5) * 0.5 });
     }
-    sign(ctx.extra, m.schild, { w: 1.3, h: 0.16, bg: '#1c1c1f', fg: '#e8772e' }, cx, 0.12, z1 - 0.01, [0, -1]);
+    // Schild an der Stange: eins zur Straße, eins in den Laden
+    sign(ctx.extra, m.schild, { w: 0.9, h: 0.12, bg: '#1c1c1f', fg: '#e8772e' }, cx, m.hoehe - 0.1, rodZ - 0.02, [0, -1]);
     sign(ctx.extra, m.schild, { w: 0.9, h: 0.12, bg: '#1c1c1f', fg: '#e8772e' }, cx, m.hoehe - 0.1, rodZ + 0.02, [0, 1]);
   },
 

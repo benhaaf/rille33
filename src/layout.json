@@ -193,6 +193,110 @@
     "titel": "Rille 33 – Plattenladen & Listening Bar",
     "untertitel": "Draufsicht · 12 × 15 m · 180 m²"
   },
+  "stationen": [
+    {
+      "nr": 1,
+      "titel": "Schaufenster",
+      "bezug": "M1",
+      "objekte": ["M1"],
+      "kamera": { "position": [5.75, -2.6], "hoehe": 1.6, "ziel": [5.75, 0.8, 0.7] },
+      "entscheidung": "Fantasiefenster „Album der Woche“.",
+      "begruendung": "Wechselndes Thema schafft Anlass zum Betreten und zeigt Sortimentskompetenz.",
+      "quelle": "Ahlert/Kenning/Brock 2020, S. 303–306 (Fenstertypen)",
+      "annahme": "Wöchentlicher Wechsel ist personell leistbar."
+    },
+    {
+      "nr": 2,
+      "titel": "Eingangszone",
+      "bezug": "Z1",
+      "objekte": ["Z1"],
+      "kamera": { "position": [2.5, 0.35], "hoehe": 1.7, "ziel": [7.5, 1.2, 13.5] },
+      "entscheidung": "Eingangszone frei von Warenträgern.",
+      "begruendung": "Orientierung beim Betreten, freier Blick bis zur Bar.",
+      "quelle": "Ahlert et al. 2020, S. 297–302",
+      "annahme": "Kunden brauchen nach dem Eintreten kurz Orientierung."
+    },
+    {
+      "nr": 3,
+      "titel": "Neuheiten",
+      "bezug": "M2/M3",
+      "objekte": ["M2", "M3"],
+      "kamera": { "position": [1.9, 2.9], "hoehe": 1.9, "ziel": [5, 0.8, 4.6] },
+      "entscheidung": "Tische quer zum Hauptweg.",
+      "begruendung": "Querplatzierung erzeugt Bremseffekt und neue Kaufrelevanz (Impulskäufe).",
+      "quelle": "Ahlert et al. 2020, S. 300–301, Abb. 10.3"
+    },
+    {
+      "nr": 4,
+      "titel": "Genre-Wand",
+      "bezug": "M4",
+      "objekte": ["M4", "Z3"],
+      "kamera": { "position": [2.7, 3.6], "hoehe": 1.65, "ziel": [0.3, 1.4, 7.2] },
+      "entscheidung": "Längsplatzierung, Produktblock nach Genre, Regalzonen gezielt belegt.",
+      "begruendung": "Wer ein Genre sucht, findet es schnell (bestehende Kaufabsicht).",
+      "quelle": "Ahlert et al. 2020, S. 300–303",
+      "annahme": "Rock/Indie und Hip-Hop sind die umsatzstärksten Genres, daher vorn."
+    },
+    {
+      "nr": 5,
+      "titel": "Second-Hand",
+      "bezug": "Z4",
+      "objekte": ["Z4", "M5", "M6"],
+      "kamera": { "position": [3.9, 6.2], "hoehe": 2.2, "ziel": [6.2, 0.6, 8.9] },
+      "entscheidung": "Digging-Kisten in der Ladenmitte, abseits des Hauptwegs.",
+      "begruendung": "Sammler suchen gezielt und bleiben lange, ohne den Hauptstrom zu blockieren.",
+      "quelle": "Ahlert et al. 2020, S. 297–302; Larson et al. 2005 (Kundenlauf)",
+      "annahme": "Sammler sind die Stammkundschaft."
+    },
+    {
+      "nr": 6,
+      "titel": "Listening Bar",
+      "bezug": "Z5",
+      "objekte": ["Z5", "M7", "M8"],
+      "kamera": { "position": [7.3, 9.9], "hoehe": 1.8, "ziel": [8, 1.2, 13.8] },
+      "entscheidung": "Bar und Hörstationen an der Rückwand.",
+      "begruendung": "Attraktiver Zielpunkt zieht Kunden durch den gesamten Laden; Atmosphäre über Klang, Licht, Material.",
+      "quelle": "Ahlert et al. 2020, S. 303–306",
+      "annahme": "Bar erhöht die Verweildauer."
+    },
+    {
+      "nr": 7,
+      "titel": "Hardware & Beratung",
+      "bezug": "Z6",
+      "objekte": ["Z6", "M9", "M10"],
+      "kamera": { "position": [8.6, 6], "hoehe": 1.75, "ziel": [11.5, 1.2, 7.8] },
+      "entscheidung": "Beratungszone außerhalb des Hauptstroms, Hardware im Herstellerblock.",
+      "begruendung": "Beratung braucht Ruhe; Hardware-Käufer vergleichen oft markenweise.",
+      "quelle": "Ahlert et al. 2020, S. 297–303",
+      "annahme": "Markenvergleich ist bei Plattenspielern typisch."
+    },
+    {
+      "nr": 8,
+      "titel": "Kasse & Zubehör",
+      "bezug": "Z7",
+      "objekte": ["Z7", "M11", "M12"],
+      "kamera": { "position": [9.3, 6], "hoehe": 1.9, "ziel": [9.4, 0.9, 2.6] },
+      "entscheidung": "Kasse vorn rechts am Ende des Hauptwegs, Zubehör-Gondel an der Warteschlange.",
+      "begruendung": "Kasse am Ausgang, Zusatzkäufe beim Warten.",
+      "quelle": "Ahlert et al. 2020, S. 295–302",
+      "annahme": "Wartezeit wird für Zubehörkäufe genutzt."
+    }
+  ],
+  "rahmen": {
+    "titel": "Rille 33 – Plattenladen & Listening Bar",
+    "felder": [
+      { "name": "Store", "text": "Rille 33 – Plattenladen & Listening Bar" },
+      { "name": "Standort", "text": "Innenstadt-Nebenlage Heilbronn, Nähe Hochschule", "annahme": true },
+      {
+        "name": "Kundengruppen",
+        "liste": ["Sammler (25–55 J., zielgerichtet, lange Verweildauer)", "Einsteiger/Studierende (Vinyl-Revival, stöbernd)", "Geschenkkäufer (kurz, beratungsbedürftig)"]
+      },
+      { "name": "Sortiment", "text": "Neuware-LPs, Second-Hand-Platten, Plattenspieler/Hardware, Zubehör & Merch, Getränke an der Listening Bar" },
+      { "name": "Fläche", "text": "180 m² gesamt (12 × 15 m), davon ca. 165 m² Verkaufsfläche" },
+      { "name": "Wirtschaftliche Größe", "text": "Zielumsatz 495.000 €/Jahr = 165 m² × 3.000 €/m²", "annahme": true, "hinweis": "Flächenproduktivität nicht belegt" }
+    ],
+    "fusszeile": "Uni-Projekt BWL Handel · Store Layout · DHBW Heilbronn"
+  },
   "start": {
     "position": [2.5, 0.6],
     "blickrichtung_grad": 0,
