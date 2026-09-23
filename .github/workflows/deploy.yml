@@ -25,6 +25,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      # Offline-Einzeldatei zum Herunterladen (läuft per Doppelklick ohne Server)
+      - run: npm run build:einzeldatei && cp dist-einzeldatei/rille33-offline.html dist/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

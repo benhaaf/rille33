@@ -13,6 +13,7 @@ const BUTTONS = {
   9: 'praesentation', // Options
   10: 'regalzonen', // L3
   11: 'png', // R3: Draufsicht als PNG (Ergänzung zur SPEC)
+  6: 'musik', // L2: Lo-Fi-Musik an/aus (Ergänzung zur SPEC)
 };
 const R2 = 7;
 

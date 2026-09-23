@@ -2,8 +2,8 @@
 import config from '../config.js';
 import { ACTIONS } from './actions.js';
 
-const CLICK_ACTIONS = new Set(['png']);
-const TOGGLE_BUTTONS = ['ansicht', 'hauptweg', 'zonen', 'regalzonen', 'praesentation', 'rahmen', 'png'];
+const CLICK_ACTIONS = new Set(['png', 'musik']);
+const TOGGLE_BUTTONS = ['ansicht', 'hauptweg', 'zonen', 'regalzonen', 'praesentation', 'rahmen', 'musik', 'png'];
 
 export class TouchInput {
   constructor(bus, root) {
