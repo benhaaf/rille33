@@ -7,8 +7,8 @@
 | 1 | Projekt-Setup, leerer Raum (Wände, Eingang, Schaufenster, Notausgang, Lagerwand), Controller-/Tastatur-/Touch-Steuerung mit Kollision, GitHub Pages, PWA/Offline | ✅ fertig, auf dem iPad getestet |
 | 2 | `layout.json` vollständig: Zonen Z1–Z8, Möbel M1–M12, Plattencover, Regalzonen + Höhenmarken | ✅ fertig |
 | 3 | Licht und Materialien je Zone (aus `layout.json`), Spots, Filz, Holz/Beton | ✅ fertig |
-| 4 | Draufsicht (orthografisch), Hauptweg mit Pfeilen, Sammler-Weg, Legende, Maßstab, PNG-Export (iPad: Teilen-Dialog / neuer Tab) | ⏳ als Nächstes |
-| 5 | Infokarten, Präsentationsmodus mit 8 Stationen, Rahmen-Overlay | offen |
+| 4 | Draufsicht (orthografisch), Hauptweg mit Pfeilen, Sammler-Weg, Legende, Maßstab, PNG-Export (iPad: Teilen-Dialog / neuer Tab) | ✅ fertig |
+| 5 | Infokarten, Präsentationsmodus mit 8 Stationen, Rahmen-Overlay | ⏳ als Nächstes |
 | 6 | Feinschliff: 60 fps auf iPad/Laptop, optional Lo-Fi-Loop, README | offen |
 
 ## Etappe 1 – erledigt
@@ -48,7 +48,19 @@
 - Das 1-m-Raster gehört jetzt zur Zonen-Ansicht (wird mit „Zonen“ ein-/ausgeblendet).
 - Leistungsreserve: `?licht=einfach` bzw. `lichtEinfach: true` in `config.js` → weniger Lichtquellen, keine Spots. Stand: ca. 110 Draw Calls, 36.000 Dreiecke, 14 Lichtquellen.
 
-## Als Nächstes (Etappe 4)
-- Draufsicht mit orthografischer Kamera: Zonen farbig mit Namen, Möbel-IDs, Legende, Maßstabsbalken.
-- Hauptweg als leuchtende Linie mit Richtungspfeilen, gestrichelter Sammler-Weg.
-- PNG-Export der Draufsicht (auf dem iPad über den Teilen-Dialog, sonst Bild in neuem Tab).
+## Zwischenschritt – detailliertere Plattencover (Wunsch nach Etappe 3)
+- 64 prozedurale Cover mit fiktiven Band- und Albumnamen, verschiedenen Schriften und Motiven, gelegentlich „NEU“-Aufkleber.
+- Auch Platten in Fächern, Kisten und Stapeln zeigen Cover; Second-Hand-Platten leicht verblichen.
+- Alles auf einem Textur-Atlas in einer InstancedMesh → weniger Draw Calls als vorher (ca. 100).
+
+## Etappe 4 – erledigt
+- Draufsicht (Dreieck / T / „Ansicht“): orthografische Kamera, Straße unten, Decke/Leuchten/Straße ausgeblendet.
+- 2D-Overlay: Titel, Zonennamen mit Flächentyp (Position je Zone über `zonen[].beschriftung` in `layout.json`), Möbel-IDs, Beschriftung von Eingang/Schaufenster/Notausgang, Legende (Zonen, Wege, Sperrfläche, Möbel), Maßstabsbalken 0–5 m. Passt sich an Quer- und Hochformat an und lässt Platz für die Touch-Buttons.
+- Hauptweg (`wege` in `layout.json`) als leuchtende Linie mit wandernden Richtungspfeilen, Sammler-Weg gestrichelt (Eingang → Second-Hand). Ein-/ausblendbar mit Kreis / H / „Weg“ – in beiden Ansichten.
+- PNG-Export (R3 / B / „PNG“): 2400 × 1600 px, sieht aus wie die Draufsicht. Vorschau-Dialog mit „Teilen / Sichern“ (Teilen-Dialog des iPads), „Herunterladen“, „In neuem Tab öffnen“, langes Drücken aufs Bild.
+- Ergänzung zur SPEC: PNG-Export auch auf R3 (Controller) und B (Tastatur), weil Kapitel 10 dafür keine Taste vorsieht.
+
+## Als Nächstes (Etappe 5)
+- Infokarten (Entscheidung · Begründung · Quelle · Annahme) für die 8 Stationen, X / E / „Info“ zeigt die Karte zum Objekt im Blick.
+- Präsentationsmodus: Kamera fliegt weich von Station zu Station (R1/L1), Stationsnummer „3/8“.
+- Rahmen-Overlay mit den Eckdaten aus Kapitel 3.

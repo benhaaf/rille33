@@ -2,6 +2,7 @@
 import config from '../config.js';
 import { ACTIONS } from './actions.js';
 
+const CLICK_ACTIONS = new Set(['png']);
 const TOGGLE_BUTTONS = ['ansicht', 'hauptweg', 'zonen', 'regalzonen', 'praesentation', 'rahmen', 'png'];
 
 export class TouchInput {
@@ -43,7 +44,11 @@ export class TouchInput {
         e.preventDefault();
         el.classList.add('pressed');
         this.lastActive = performance.now();
-        this.bus.emit(el.dataset.action, 'touch');
+        if (!CLICK_ACTIONS.has(el.dataset.action)) this.bus.emit(el.dataset.action, 'touch');
+      });
+      // Manche Aktionen brauchen eine echte Nutzergeste (z. B. Teilen-Dialog in Safari)
+      el.addEventListener('click', () => {
+        if (CLICK_ACTIONS.has(el.dataset.action)) this.bus.emit(el.dataset.action, 'touch');
       });
       const up = () => el.classList.remove('pressed');
       el.addEventListener('pointerup', up);

@@ -12,6 +12,7 @@ const KEYS = {
   ArrowRight: 'weiter',
   ArrowLeft: 'zurueck',
   i: 'rahmen',
+  b: 'png', // Draufsicht als Bild speichern
 };
 
 export class KeyboardMouseInput {

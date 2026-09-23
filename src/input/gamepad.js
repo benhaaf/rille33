@@ -12,6 +12,7 @@ const BUTTONS = {
   8: 'rahmen', // Create/Share
   9: 'praesentation', // Options
   10: 'regalzonen', // L3
+  11: 'png', // R3: Draufsicht als PNG (Ergänzung zur SPEC)
 };
 const R2 = 7;
 

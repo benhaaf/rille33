@@ -23,10 +23,17 @@ Uni-Projekt (BWL Handel, Store Layout, DHBW Heilbronn). Spezifikation: [SPEC.md]
 | Präsentationsmodus | Options | P | „Präs.“ |
 | Nächste / vorige Station | R1 / L1 | → / ← | „Weiter“ / „Zurück“ |
 | Rahmen-Overlay | Create | I | „Rahmen“ |
+| Draufsicht als PNG speichern | R3 | B | „PNG“ |
 
 Empfindlichkeit, Deadzone, Tempo und Grafikqualität: `src/config.js`. Store-Daten (Raum, Zonen, Möbel, Regalzonen, Licht, Materialien): `src/layout.json`.
 
 URL-Parameter: `?pos=x,z,blickGrad` (Startpunkt), `?fps=0` (FPS-Anzeige aus), `?licht=einfach` (weniger Lichtquellen, falls es ruckelt), `?debug` (`window.rille` in der Konsole).
+
+## Draufsicht als PNG (für die Folien)
+„PNG“ antippen (geht aus beiden Ansichten). Es erscheint eine Vorschau (2400 × 1600 px):
+- **Teilen / Sichern** öffnet den Teilen-Dialog des iPads („Bild sichern“, AirDrop, Dateien …)
+- **Herunterladen** speichert in „Dateien“, **In neuem Tab öffnen** zeigt das Bild einzeln
+- oder das Bild in der Vorschau lange drücken → „Zu Fotos hinzufügen“
 
 ## Entwicklung
 ```
