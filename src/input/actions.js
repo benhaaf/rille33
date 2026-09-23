@@ -10,6 +10,7 @@ export const ACTIONS = {
   zurueck: { label: 'Vorige Station', kurz: 'Zurück', icon: '‹', etappe: 5 },
   rahmen: { label: 'Rahmen-Overlay', kurz: 'Rahmen', icon: '≡', etappe: 5 },
   png: { label: 'Draufsicht als PNG', kurz: 'PNG', icon: '⤓', etappe: 4 },
+  musik: { label: 'Lo-Fi-Musik an den Hörstationen', kurz: 'Musik', icon: '♪', etappe: 6 },
 };
 
 // Winziger Event-Bus für Aktionen

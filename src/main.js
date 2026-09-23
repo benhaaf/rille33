@@ -12,6 +12,7 @@ import { TopView } from './topview.js';
 import { ExportDialog } from './exportDialog.js';
 import { Panels } from './panels.js';
 import { Presentation } from './presentation.js';
+import { LofiAudio } from './audio.js';
 import { Collider } from './collision.js';
 import { Player } from './player.js';
 import { ActionBus, ACTIONS } from './input/actions.js';
@@ -234,6 +235,24 @@ bus.on('info', () => {
   }
 });
 
+// Lo-Fi-Musik (synthetisch, räumlich an den Hörstationen)
+const audio = new LofiAudio(layout);
+bus.on('musik', async () => {
+  const on = await audio.toggle();
+  touch.setActive('musik', on);
+  hud.toast(on ? 'Lo-Fi-Musik an – kommt aus den Hörstationen' : 'Musik aus', 1600);
+  if (on) {
+    // Per Controller gestartet? iOS braucht einmal eine Berührung, bevor Ton erlaubt ist.
+    setTimeout(() => {
+      if (!audio.blocked) return;
+      hud.toast('Für die Musik einmal auf den Bildschirm tippen', 3000);
+      const unlock = () => audio.ctx.resume();
+      window.addEventListener('pointerdown', unlock, { once: true });
+      window.addEventListener('keydown', unlock, { once: true });
+    }, 400);
+  }
+});
+
 bus.on('rahmen', () => {
   const on = panels.toggleRahmen();
   touch.setActive('rahmen', on);
@@ -242,7 +261,7 @@ bus.on('rahmen', () => {
 setupPWA((t) => hud.toast(t, 4000));
 
 // Diagnose in der Browser-Konsole: ?debug → window.rille
-if (new URLSearchParams(location.search).has('debug')) window.rille = { renderer, scene, camera, player, topView, bus, presentation };
+if (new URLSearchParams(location.search).has('debug')) window.rille = { renderer, scene, camera, player, topView, bus, presentation, audio };
 
 // Größe
 function resize() {
@@ -306,4 +325,30 @@ renderer.setAnimationLoop(() => {
     renderer.render(scene, topView.camera);
   }
   hud.tick(dt);
+  audio.updateListener(view === 'top' ? topView.camera : camera);
+  adaptResolution(dt);
 });
+
+// Dynamische Auflösung: Sicherheitsnetz, falls ein Gerät die 60 fps nicht schafft.
+// Misst über 3 s; liegt der Schnitt unter config.grafik.zielFps, wird die Pixeldichte in Schritten gesenkt.
+let perfTime = 0;
+let perfFrames = 0;
+let perfWarmup = 5; // die ersten Sekunden (Shader werden kompiliert) nicht bewerten
+function adaptResolution(dt) {
+  if (!config.grafik.dynamischeAufloesung || document.hidden) return;
+  if (perfWarmup > 0) {
+    perfWarmup -= dt;
+    return;
+  }
+  perfTime += dt;
+  perfFrames++;
+  if (perfTime < 3) return;
+  const fps = perfFrames / perfTime;
+  perfTime = 0;
+  perfFrames = 0;
+  const pr = renderer.getPixelRatio();
+  if (fps < config.grafik.zielFps && pr > config.grafik.minPixelRatio + 0.01) {
+    renderer.setPixelRatio(Math.max(config.grafik.minPixelRatio, pr - 0.25));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+}

@@ -1,18 +1,27 @@
 import * as THREE from 'three';
 
-// Schild/Beschriftung als Canvas-Textur
-export function labelTexture(text, { bg = '#1c1c1f', fg = '#ffffff', width = 512, height = 128, font = 'bold 64px system-ui, sans-serif' } = {}) {
+// Schild/Beschriftung als Canvas-Textur. Mehrzeilig mit \n; die Schrift wird so weit verkleinert,
+// dass jede Zeile aufs Schild passt (sonst wird der Text abgeschnitten).
+export function labelTexture(text, { bg = '#1c1c1f', fg = '#ffffff', width = 512, height = 128, weight = 'bold' } = {}) {
   const c = document.createElement('canvas');
   c.width = width;
   c.height = height;
   const g = c.getContext('2d');
   g.fillStyle = bg;
   g.fillRect(0, 0, width, height);
+  const lines = String(text).split('\n');
+  const font = (px) => `${weight} ${px}px system-ui, -apple-system, sans-serif`;
+  let size = Math.floor((height * 0.72) / lines.length);
+  g.font = font(size);
+  while (size > 10 && lines.some((l) => g.measureText(l).width > width * 0.9)) {
+    size -= 2;
+    g.font = font(size);
+  }
   g.fillStyle = fg;
-  g.font = font;
   g.textAlign = 'center';
   g.textBaseline = 'middle';
-  g.fillText(text, width / 2, height / 2 + 2);
+  const lh = size * 1.15;
+  lines.forEach((l, i) => g.fillText(l, width / 2, height / 2 + (i - (lines.length - 1) / 2) * lh + 2));
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = 4;

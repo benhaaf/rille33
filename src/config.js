@@ -23,10 +23,14 @@ export default {
     maxPixelRatio: 1.5,
     antialias: true,
     fov: 70,
+    // Fällt die Bildrate länger unter diesen Wert, wird die Auflösung automatisch etwas gesenkt
+    dynamischeAufloesung: true,
+    zielFps: 50,
+    minPixelRatio: 1,
     // true = weniger Lichtquellen, keine Spots (falls das iPad unter 60 fps fällt). Auch per URL: ?licht=einfach
     lichtEinfach: false,
   },
 
-  // FPS-Anzeige oben links (per URL ?fps=0 abschaltbar)
-  zeigeFps: true,
+  // FPS-Anzeige oben links (zum Messen per URL ?fps=1 einschalten)
+  zeigeFps: false,
 };

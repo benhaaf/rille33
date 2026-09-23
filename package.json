@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview --host"
+    "preview": "vite preview --host",
+    "build:einzeldatei": "vite build --mode einzeldatei && node scripts/einzeldatei.mjs"
   },
   "dependencies": {
     "three": "^0.186.0"

@@ -118,8 +118,8 @@ export function buildRoom(layout) {
       wallWithOpenings(group, { axis: 'z', from: Math.min(az, bz), to: Math.max(az, bz), a: ax - half, b: ax + half, height: w.hoehe, openings }, mat.wand);
       if (w.tuer) {
         group.add(box(mat.tuer, [ax - half * 0.6, ax + half * 0.6, w.tuer.von, w.tuer.bis], w.tuer.hoehe));
-        const s = sign('Lager – nur Personal', { bg: '#e8772e', fg: '#1c1c1f', w: 0.8, h: 0.16 });
-        toThree(ax + half + 0.01, 1.6, (w.tuer.von + w.tuer.bis) / 2, s.position);
+        const s = sign(w.tuer.schild || 'LAGER\nNur Personal', { bg: '#e8772e', fg: '#1c1c1f', w: 0.62, h: 0.34 });
+        toThree(ax + half + 0.012, 1.62, (w.tuer.von + w.tuer.bis) / 2, s.position);
         s.rotation.y = Math.PI / 2;
         group.add(s);
       }

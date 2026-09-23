@@ -13,6 +13,7 @@ const KEYS = {
   ArrowLeft: 'zurueck',
   i: 'rahmen',
   b: 'png', // Draufsicht als Bild speichern
+  m: 'musik', // Lo-Fi-Musik an/aus
 };
 
 export class KeyboardMouseInput {

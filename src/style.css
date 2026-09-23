@@ -153,9 +153,14 @@ html, body {
 #station-bar .tbtn { width: 76px; height: 64px; }
 #station-bar .tbtn span { font-size: 28px; }
 
-@media (max-height: 560px) {
+@media (max-height: 700px) {
   #toggle-bar { gap: 5px; }
-  #toggle-bar .tbtn { height: 48px; }
+  #toggle-bar .tbtn { height: 50px; }
+}
+@media (max-height: 560px) {
+  #toggle-bar { gap: 4px; }
+  #toggle-bar .tbtn { height: 42px; }
+  #toggle-bar .tbtn small { display: none; }
 }
 
 /* Draufsicht */

@@ -9,7 +9,7 @@
 | 3 | Licht und Materialien je Zone (aus `layout.json`), Spots, Filz, Holz/Beton | ✅ fertig |
 | 4 | Draufsicht (orthografisch), Hauptweg mit Pfeilen, Sammler-Weg, Legende, Maßstab, PNG-Export (iPad: Teilen-Dialog / neuer Tab) | ✅ fertig |
 | 5 | Infokarten, Präsentationsmodus mit 8 Stationen, Rahmen-Overlay | ✅ fertig |
-| 6 | Feinschliff: 60 fps auf iPad/Laptop, optional Lo-Fi-Loop, README | ⏳ als Nächstes |
+| 6 | Feinschliff: 60 fps auf iPad/Laptop, optional Lo-Fi-Loop, README | ✅ fertig |
 
 ## Etappe 1 – erledigt
 - Vite 8 + Three.js, `base: '/rille33/'`, GitHub-Actions-Workflow für Pages.
@@ -72,7 +72,19 @@
 - Ursache: Rahmenflächen lagen exakt auf Wandflächen (Laibung, Sturz) und die Rahmen von Tür und Schaufenster überdeckten sich → Z-Fighting.
 - Lösung: Rahmen ragen 5 mm in die Öffnung, jede Öffnung steht minimal anders weit vor der Wand; Schaufenster hat jetzt auch unten einen Rahmen.
 
-## Als Nächstes (Etappe 6)
-- Feinschliff nach euren Tests auf dem iPad (fps, Texte, Kamerapositionen der Stationen).
-- Optional: leiser synthetischer Lo-Fi-Loop per Web Audio an den Hörstationen, ein-/ausschaltbar.
-- README mit Tastenbelegung finalisieren, FPS-Anzeige standardmäßig aus.
+## Fix – Lager-Schild und Notausgang
+- Schildtexte werden automatisch verkleinert, damit nichts abgeschnitten wird (vorher war vom Lager-Schild nur „r Perso“ zu sehen); mehrzeilige Schilder möglich.
+- Lagertür: zweizeiliges Schild „LAGER / Nur Personal“ (Text in `layout.json` → `innenwaende[].tuer.schild`).
+- Keine Leuchten mehr über Sperrflächen (Pendelleuchte hing vor dem Notausgang-Schild).
+- Grundboden reicht unter die Wände (kein heller Spalt unter der Notausgangstür).
+
+## Etappe 6 – erledigt
+- FPS-Anzeige standardmäßig aus (`?fps=1` zum Messen).
+- Dynamische Auflösung: fällt die Bildrate länger als 3 s unter 50 fps, wird die Pixeldichte schrittweise gesenkt (nach 5 s Aufwärmzeit; abschaltbar in `config.js`).
+- Offline-Einzeldatei `rille33-offline.html`: eine HTML-Datei mit allem drin, läuft per Doppelklick ohne Server/Internet (für den Präsentations-Laptop). Wird bei jedem Deployment mit veröffentlicht: https://benhaaf.github.io/rille33/rille33-offline.html
+- Lo-Fi-Musik (optional laut SPEC): synthetisch per Web Audio (Rhodes-Akkorde Dm9–G13–Cmaj9–Am9, Bass, Beat, Vinyl-Knistern), räumlich aus den 3 Hörstationen, an/aus mit L2 / M / „Musik“. Auf dem iPad funktioniert sie auch bei Stummschalter (iOS 17+).
+- README mit vollständiger Steuerung, Präsentationsablauf, Offline-Nutzung und Anleitung zum Ändern von `layout.json`.
+
+## Offen / Ideen
+- Test mit echtem PS5-Controller am iPad (Options/Create könnten von iPadOS abgefangen werden – dann Tasten umlegen).
+- Kamerapositionen der Stationen nach Probelauf feinjustieren (`layout.json` → `stationen[].kamera`).
