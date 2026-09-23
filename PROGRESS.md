@@ -68,6 +68,10 @@
 - Rahmen-Overlay (Create / I / „Rahmen“) mit allen Feldern aus Kap. 3, Annahmen gelb markiert (`layout.json` → `rahmen`).
 - Schild „Album der Woche“ hängt jetzt an der Stange, damit es von der Straße aus sichtbar ist.
 
+## Fix nach Etappe 5 – flimmernde Tür- und Fensterrahmen
+- Ursache: Rahmenflächen lagen exakt auf Wandflächen (Laibung, Sturz) und die Rahmen von Tür und Schaufenster überdeckten sich → Z-Fighting.
+- Lösung: Rahmen ragen 5 mm in die Öffnung, jede Öffnung steht minimal anders weit vor der Wand; Schaufenster hat jetzt auch unten einen Rahmen.
+
 ## Als Nächstes (Etappe 6)
 - Feinschliff nach euren Tests auf dem iPad (fps, Texte, Kamerapositionen der Stationen).
 - Optional: leiser synthetischer Lo-Fi-Loop per Web Audio an den Hörstationen, ein-/ausschaltbar.
