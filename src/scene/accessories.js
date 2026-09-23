@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { yawFacing } from './builder.js';
 
-function canvasTex(w, h, draw) {
+export function canvasTex(w, h, draw) {
   const c = document.createElement('canvas');
   c.width = w;
   c.height = h;
@@ -15,7 +15,7 @@ function canvasTex(w, h, draw) {
 
 const font = (weight, px, fam = 'system-ui, -apple-system, sans-serif') => `${weight} ${px}px ${fam}`;
 
-function fitText(g, text, x, y, maxW, weight, px, fam) {
+export function fitText(g, text, x, y, maxW, weight, px, fam) {
   let size = px;
   g.font = font(weight, size, fam);
   while (g.measureText(text).width > maxW && size > 8) {

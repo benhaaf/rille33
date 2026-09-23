@@ -5,6 +5,7 @@ import { Covers, COVER } from './covers.js';
 import { signMesh } from './labels.js';
 import { Drawers } from './drawers.js';
 import { AccessoryKit, priceLabel } from './accessories.js';
+import { Decor } from './decor.js';
 
 const std = (color, roughness = 0.8, metalness = 0) => new THREE.MeshStandardMaterial({ color, roughness, metalness });
 
@@ -465,17 +466,22 @@ export function buildFurniture(layout) {
   const rand = rng(33);
   const b = new Builder({ ...MATERIALS });
   const covers = new Covers(layout.cover_farben, rand);
-  const ctx = { rand, covers, extra: b.extra, layout, acc: new AccessoryKit(), drawers: new Drawers(MATERIALS, covers) };
+  const decor = new Decor();
+  Object.assign(b.materials, decor.builderMaterials);
   const colliders = [];
+  const ctx = { rand, covers, extra: b.extra, layout, acc: new AccessoryKit(), drawers: new Drawers(MATERIALS, covers), mats: MATERIALS, builder: b, colliders };
   for (const m of layout.moebel) {
     const fn = BUILDERS[m.typ];
     if (!fn) {
       console.warn(`Unbekannter Möbeltyp: ${m.typ} (${m.id})`);
       continue;
     }
-    fn(b, m, ctx);
+    if (m.typ === 'bar') decor.bar(b, m, ctx);
+    else fn(b, m, ctx);
+    decor.details(b, m, ctx);
     colliders.push(...footprints(m));
   }
+  colliders.push(...decor.wall(ctx, layout));
   // Rückbuffet der Bar steht an der Wand
   const bar = layout.moebel.find((m) => m.typ === 'bar');
   if (bar) colliders.push([bar.rechteck[0], bar.rechteck[1], 14.6, 15]);

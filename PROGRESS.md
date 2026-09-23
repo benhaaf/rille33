@@ -96,6 +96,13 @@
 - „Info“ / X / E: zeigt das Fadenkreuz auf eine Schublade oder Tür, wird diese bedient – sonst wie bisher die Infokarte.
 - Stand: ca. 160 Draw Calls, 44.000 Dreiecke.
 
+## Erweiterung – detailliertere Einrichtung, Bar, Wand zum Lager
+- Neues Modul `src/scene/decor.js` (Stil wie das Zubehör: einfache Formen + gezeichnete Texturen).
+- **Bar:** Lattenfront, LED-Leiste, Fußstange, Zapfanlage mit 3 Hähnen, Untersetzer mit Gläsern/Tassen, Getränkekarten, Kassen-Tablet, Pflanze. Rückbuffet (über Thekenhöhe, da zwischen Theke und Wand kaum Platz ist) mit Siebträger-Espressomaschine, Mühle, DJ-Plattenspieler mit Boxen und „Jetzt läuft“. Zwei Regale mit etikettierten Flaschen (5 Sorten, z. B. „Neckar Gin“, „Rille Mate“), Gläserreihe, LED darunter. Glastür-Kühlschrank am Thekenende. Barhocker mit Lehne. Neon „Listening Bar“ auf dem Filz, Kreidetafel „Getränke“.
+- **Wand zum Lager** (`layout.json` → `wanddeko`, Texte dort änderbar): Holzlatten-Verkleidung, Neon „RILLE 33“, 5 gerahmte Veranstaltungsposter, große Pflanze; zur Bar hin Tafeln „Hörregeln“ und „Diese Woche“.
+- **Details:** Aufsteller an den Hörstationen, Schilder „Neuheiten“/„Charts“, Trennkarten und Schilder „Second-Hand A–M / N–Z“, Kassenbildschirm mit Oberfläche, hängendes Schild „KASSE“, Gutschein-Aufsteller, Preisschilder an der Hardware-Wand, Beratungs-Aufsteller, Prospekte und Hocker am Beratungstisch.
+- Stand: ca. 180 Draw Calls, 58.000 Dreiecke.
+
 ## Offen / Ideen
 - Test mit echtem PS5-Controller am iPad (Options/Create könnten von iPadOS abgefangen werden – dann Tasten umlegen).
 - Kamerapositionen der Stationen nach Probelauf feinjustieren (`layout.json` → `stationen[].kamera`).
