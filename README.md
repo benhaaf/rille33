@@ -22,6 +22,7 @@ Uni-Projekt (BWL Handel, Store Layout, DHBW Heilbronn): begehbarer 3D-Prototyp e
 | Rahmen-Overlay (Kap. 3) | Create/Share | I | „Rahmen“ |
 | Draufsicht als PNG speichern* | R3 | B | „PNG“ |
 | Lo-Fi-Musik an/aus* | L2 | M | „Musik“ |
+| Kundensimulation starten/beenden* | Steuerkreuz oben | K | „Sim.“ |
 
 \* Ergänzungen zur SPEC (Kap. 10 sieht dafür keine Taste vor).
 
@@ -34,6 +35,9 @@ Der Controller verbindet sich per USB oder Bluetooth; nach dem ersten Tastendruc
 4. „Rahmen“ / Create zeigt Standort, Kundengruppen, Sortiment, Fläche und Zielumsatz.
 5. Dreieck / „Ansicht“ wechselt in die Draufsicht mit Legende und Maßstab.
 6. Nach Station 8 folgen „Fazit“ und „Quellen“. Texte: `layout.json` → `praesentation`.
+
+## Kundensimulation
+„Sim.“ / K startet eine Kundin, die aus der Karlspassage kommt und den Hauptweg abläuft. An jedem Halt erklärt eine Bildunterschrift, warum sie dort stehen bleibt. Weiter/Zurück springt zum nächsten Halt, „Ansicht“ zeigt sie in der Draufsicht. Beim nächsten Start läuft der Sammler seinen eigenen Weg. Halte und Texte: `layout.json` → `simulation`.
 
 ## Auf dem iPad installieren (offline)
 1. Seite in Safari öffnen und warten, bis „Offline bereit“ erscheint.

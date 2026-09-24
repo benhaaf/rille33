@@ -14,6 +14,7 @@ const KEYS = {
   i: 'rahmen',
   b: 'png', // Draufsicht als Bild speichern
   m: 'musik', // Lo-Fi-Musik an/aus
+  k: 'simulation', // Kundensimulation starten/beenden
 };
 
 export class KeyboardMouseInput {

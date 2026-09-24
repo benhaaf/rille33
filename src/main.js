@@ -8,12 +8,14 @@ import { buildZones, buildShelfZones } from './scene/zones.js';
 import { buildLighting } from './scene/lighting.js';
 import { buildFloors, buildWallDetails } from './scene/surfaces.js';
 import { buildPaths } from './scene/paths.js';
+import { buildPassage } from './scene/passage.js';
 import { TopView } from './topview.js';
 import { ExportDialog } from './exportDialog.js';
 import { Panels } from './panels.js';
 import { Presentation } from './presentation.js';
 import { LofiAudio } from './audio.js';
 import { Interactions } from './interact.js';
+import { Simulation } from './simulation.js';
 import { Collider } from './collision.js';
 import { Player } from './player.js';
 import { ActionBus, ACTIONS } from './input/actions.js';
@@ -43,6 +45,7 @@ const camera = new THREE.PerspectiveCamera(config.grafik.fov, window.innerWidth 
 // Raum
 const room = buildRoom(layout);
 scene.add(room.group);
+room.outside.add(buildPassage(layout));
 scene.add(buildFloors(layout));
 scene.add(buildWallDetails(layout));
 buildLighting(layout, scene);
@@ -56,6 +59,7 @@ scene.add(shelfZones);
 const paths = buildPaths(layout);
 scene.add(paths.group);
 const fixtures = scene.getObjectByName('Leuchten');
+const duct = scene.getObjectByName('Lueftung');
 const collider = new Collider([...room.colliders, ...furniture.colliders]);
 const interactions = new Interactions(camera, { drawers: furniture.drawers, doors: room.doors, collider });
 // Startpunkt, optional per URL überschreibbar: ?pos=x,z,blickGrad[,neigungGrad]
@@ -87,6 +91,7 @@ function applyTopVisibility(top) {
   room.ceiling.visible = !top;
   room.outside.visible = !top;
   if (fixtures) fixtures.visible = !top;
+  if (duct) duct.visible = !top;
   zones.userData.labels.visible = !top;
   shelfZones.visible = !top && shelfZonesOn;
   scene.background = top ? PLAN_BG : SKY;
@@ -179,6 +184,7 @@ presentation.onStation = (slide) => {
 };
 
 function startPresentation(i) {
+  if (sim.active) stopSimulation();
   if (view === 'top') setView('ego');
   if (exportDialog.visible) exportDialog.hide();
   document.body.classList.add('presenting');
@@ -221,8 +227,52 @@ bus.on('praesentation', () => {
     startPresentation(0);
   }
 });
-bus.on('weiter', () => (presentation.active ? presentation.next() : startPresentation(0)));
-bus.on('zurueck', () => (presentation.active ? presentation.prev() : startPresentation(presentation.total - 1)));
+// ---------- Kundensimulation ----------
+const sim = new Simulation(layout, scene, camera);
+app.insertAdjacentHTML('beforeend', '<div id="sim-caption" hidden><span class="sim-who"></span><p></p><small>Weiter/Zurück: nächster Halt · Sim.: beenden</small></div>');
+const simCaption = app.querySelector('#sim-caption');
+let simSaved = null;
+sim.onCaption = (text, n, total) => {
+  simCaption.hidden = false;
+  simCaption.querySelector('.sim-who').textContent = `${sim.kunde.name} · ${n ? `Halt ${n}/${total}` : 'startet'}`;
+  simCaption.querySelector('p').textContent = text;
+  simCaption.classList.remove('ic-in');
+  void simCaption.offsetWidth;
+  simCaption.classList.add('ic-in');
+};
+function startSimulation() {
+  if (presentation.active) stopPresentation();
+  if (exportDialog.visible) exportDialog.hide();
+  simSaved = { x: player.x, z: player.z, yaw: player.yaw, pitch: player.pitch };
+  const k = sim.start();
+  document.body.classList.add('simulating');
+  touch.setActive('simulation', true);
+  panels.setIndicator('Simulation');
+  hud.toast(`Simulation: ${k.name} ${k.beschreibung}`, 2200);
+}
+function stopSimulation() {
+  sim.stop();
+  simCaption.hidden = true;
+  document.body.classList.remove('simulating');
+  touch.setActive('simulation', false);
+  panels.setIndicator(null);
+  if (simSaved) Object.assign(player, simSaved);
+  player.apply();
+}
+sim.onEnd = () => {
+  stopSimulation();
+  hud.toast('Simulation beendet – erneut starten für die nächste Kundengruppe', 3000);
+};
+bus.on('simulation', () => (sim.active ? stopSimulation() : startSimulation()));
+
+bus.on('weiter', () => {
+  if (sim.active) return sim.skip(1);
+  return presentation.active ? presentation.next() : startPresentation(0);
+});
+bus.on('zurueck', () => {
+  if (sim.active) return sim.skip(-1);
+  return presentation.active ? presentation.prev() : startPresentation(presentation.total - 1);
+});
 
 // Schubladen / Tür im Fadenkreuz → X / E öffnet sie; sonst Infokarte
 bus.on('benutzen', () => interactions.interact());
@@ -285,7 +335,7 @@ bus.on('rahmen', () => {
 setupPWA((t) => hud.toast(t, 4000));
 
 // Diagnose in der Browser-Konsole: ?debug → window.rille
-if (new URLSearchParams(location.search).has('debug')) window.rille = { renderer, scene, camera, player, topView, bus, presentation, audio, interactions };
+if (new URLSearchParams(location.search).has('debug')) window.rille = { renderer, scene, camera, player, topView, bus, presentation, audio, interactions, sim };
 
 // Größe
 function resize() {
@@ -333,10 +383,13 @@ renderer.setAnimationLoop(() => {
   const sprint = Math.max(gp.sprint, kb.sprint, tc.sprint);
 
   paths.update(dt);
-  const canInteract = view === 'ego' && !presentation.active && !panels.rahmenVisible;
+  const canInteract = view === 'ego' && !presentation.active && !sim.active && !panels.rahmenVisible;
   hud.setTarget(canInteract, interactions.update(dt, canInteract));
+  if (sim.active) sim.update(dt, view === 'ego');
   if (view === 'ego') {
-    if (presentation.active) {
+    if (sim.active) {
+      // Kamera wird von der Simulation geführt
+    } else if (presentation.active) {
       presentation.update(dt);
     } else {
       player.update(dt, move, look, sprint);
