@@ -185,6 +185,74 @@ const TEX = {
       const lines = String(sub).split('\n');
       lines.forEach((l, i) => fitText(g, l, w / 2, 165 + i * 34 - (lines.length - 1) * 17, w - 30, 600, 28, SANS));
     }),
+  // Kundendisplay
+  kunde: () =>
+    canvasTex(256, 144, (g, w, h) => {
+      g.fillStyle = '#12171a';
+      g.fillRect(0, 0, w, h);
+      g.fillStyle = '#e8772e';
+      g.fillRect(0, 0, w, 8);
+      g.fillStyle = '#c9c4bc';
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      fitText(g, 'Summe', w / 2, 40, w - 20, 500, 22, SANS);
+      g.fillStyle = '#f4f1ec';
+      fitText(g, '52,79 €', w / 2, 82, w - 20, 900, 46, SANS);
+      g.fillStyle = '#3fbf7f';
+      fitText(g, 'Danke & viel Spaß beim Hören!', w / 2, 124, w - 20, 600, 16, SANS);
+    }),
+  // Kartenterminal (Draufsicht): Display + Tastenfeld
+  terminal: () =>
+    canvasTex(128, 240, (g, w, h) => {
+      g.fillStyle = '#1b1b1d';
+      g.fillRect(0, 0, w, h);
+      g.fillStyle = '#9fd3c7';
+      g.fillRect(12, 12, w - 24, 64);
+      g.fillStyle = '#12171a';
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      fitText(g, 'Karte auflegen', w / 2, 44, w - 30, 700, 15, SANS);
+      const cols = ['#3a3c40', '#3a3c40', '#3a3c40'];
+      for (let r = 0; r < 4; r++)
+        for (let c = 0; c < 3; c++) {
+          g.fillStyle = r === 3 ? ['#c0504d', '#3a3c40', '#3fbf7f'][c] : cols[c];
+          g.fillRect(14 + c * 35, 92 + r * 36, 30, 28);
+        }
+    }),
+  // Papiertüte mit Logo
+  tuete: () =>
+    canvasTex(256, 320, (g, w, h) => {
+      g.fillStyle = '#b48a5a';
+      g.fillRect(0, 0, w, h);
+      g.fillStyle = 'rgba(0,0,0,0.06)';
+      for (let x = 0; x < w; x += 5) g.fillRect(x, 0, 2, h);
+      g.fillStyle = '#1c1c1f';
+      g.beginPath();
+      g.arc(w / 2, 140, 62, 0, Math.PI * 2);
+      g.fill();
+      g.fillStyle = '#e8772e';
+      g.beginPath();
+      g.arc(w / 2, 140, 20, 0, Math.PI * 2);
+      g.fill();
+      g.fillStyle = '#1c1c1f';
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      fitText(g, 'RILLE 33', w / 2, 250, w - 30, 900, 40, SANS);
+    }),
+  // Bodenaufkleber
+  boden: () =>
+    canvasTex(512, 256, (g, w, h) => {
+      g.fillStyle = '#f2c230';
+      g.fillRect(0, 0, w, h);
+      g.fillStyle = '#1c1c1f';
+      g.fillRect(12, 12, w - 24, h - 24);
+      g.fillStyle = '#f2c230';
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      fitText(g, 'BITTE HIER ANSTELLEN', w / 2, 90, w - 60, 900, 52, SANS);
+      g.fillStyle = '#f4f1ec';
+      fitText(g, 'Zubehör gibt’s beim Warten →', w / 2, 170, w - 60, 600, 32, SANS);
+    }),
   // Kassen-Oberfläche
   kasse: () =>
     canvasTex(256, 170, (g, w, h) => {
@@ -195,7 +263,7 @@ const TEX = {
       g.fillStyle = '#1c1c1f';
       g.font = `700 12px ${SANS}`;
       g.fillText('RILLE 33 · KASSE', 8, 14);
-      const items = [['LP Nachtbus – Live', '24,99'], ['Innenhüllen 50 Stk.', '14,90'], ['Plattenbürste', '12,90']];
+      const items = [['LP Nachtbus', '24,99'], ['Innenhüllen', '14,90'], ['Bürste', '12,90']];
       g.font = `500 13px ${SANS}`;
       items.forEach(([a, b], i) => {
         g.fillStyle = '#d9d4cc';
@@ -248,6 +316,9 @@ export class Decor {
     this.coasterMat = lit(TEX.untersetzer(), { roughness: 1 });
     this.fridgeMat = new THREE.MeshBasicMaterial({ map: TEX.kuehlschrank() });
     this.posMat = new THREE.MeshBasicMaterial({ map: TEX.kasse() });
+    this.kundeMat = new THREE.MeshBasicMaterial({ map: TEX.kunde() });
+    this.terminalMat = new THREE.MeshBasicMaterial({ map: TEX.terminal() });
+    this.bagMat = lit(TEX.tuete(), { roughness: 1 });
   }
 
   bottle(b, kind, x, y, z) {
@@ -268,15 +339,18 @@ export class Decor {
   }
 
   // ======================= BAR =======================
+  // Aufbau (von vorn): Hocker · Theke · Arbeitsgang fürs Personal · Rückbuffet an der Wand.
+  // Zugang zum Arbeitsgang an beiden Thekenenden.
   bar(b, m, ctx) {
     const [x1, x2, z1, z2] = m.rechteck;
     const h = m.hoehe;
     const extra = ctx.extra;
     const D = 15;
+    const rb = m.rueckbuffet || { tiefe: 0.36, hoehe: 0.95 };
 
     // --- Theke ---
     b.box('korpus', [x1, x2, z1 + 0.05, z2], 0, h - 0.05);
-    b.box('holz', [x1 - 0.06, x2 + 0.06, z1 - 0.08, z2], h - 0.05, h);
+    b.box('holz', [x1 - 0.06, x2 + 0.06, z1 - 0.08, z2 + 0.03], h - 0.05, h);
     // Lattenfront zur Gästeseite
     for (let x = x1 + 0.03; x < x2 - 0.02; x += 0.07) b.instance('bar-latte', this.geo.box, ctx.mats.holz, { x, y: (h - 0.12) / 2 + 0.05, z: z1 + 0.035, scale: [0.04, h - 0.17, 0.03] });
     b.box('schwarz', [x1, x2, z1 + 0.04, z1 + 0.05], 0.05, h - 0.07);
@@ -286,17 +360,42 @@ export class Decor {
     b.box('chrom', [x1 + 0.05, x2 - 0.05, z1 - 0.12, z1 - 0.09], 0.2, 0.23);
     for (let x = x1 + 0.3; x < x2; x += 1.0) b.box('chrom', [x - 0.015, x + 0.015, z1 - 0.12, z1 + 0.04], 0.2, 0.225);
 
+    // --- Mitarbeiterseite der Theke (zeigt zur Wand) ---
+    // Unterbau: Spülmaschine, Kühlschubladen, offenes Gläserfach
+    const E = 0.004;
+    b.box('chrom', [x1 + 0.4, x1 + 1.0, z2, z2 + 0.02], 0.08, h - 0.12); // Gläserspüler
+    b.box('schwarz', [x1 + 0.45, x1 + 0.95, z2 + 0.02, z2 + 0.022], h - 0.3, h - 0.26);
+    for (const [a, e] of [[x1 + 1.1, x1 + 1.9], [x1 + 1.95, x1 + 2.75]]) {
+      b.box('chrom', [a, e, z2, z2 + 0.02], 0.08, 0.5); // Kühlschubladen
+      b.box('chrom', [a, e, z2, z2 + 0.02], 0.54, h - 0.12);
+      b.box('schwarz', [a + 0.2, e - 0.2, z2 + 0.02, z2 + 0.035], 0.42, 0.44);
+      b.box('schwarz', [a + 0.2, e - 0.2, z2 + 0.02, z2 + 0.035], h - 0.22, h - 0.2);
+    }
+    // offenes Fach mit Gläsern
+    b.box('korpus', [x1 + 2.9, x2 - 0.5, z2 - 0.25, z2 + E], 0.45, 0.47);
+    for (let x = x1 + 3.0; x < x2 - 0.6; x += 0.09) this.glass(b, x, 0.47, z2 - 0.12);
+    // Spüle in der Arbeitsplatte + Wasserhahn
+    const sxc = x1 + 0.7;
+    b.box('chrom', [sxc - 0.25, sxc + 0.25, z2 - 0.3, z2 - 0.02], h, h + 0.006);
+    b.box('schwarz', [sxc - 0.2, sxc + 0.2, z2 - 0.26, z2 - 0.06], h + 0.006, h + 0.008);
+    b.geo('chrom', new THREE.CylinderGeometry(0.012, 0.012, 0.3, 8), sxc, h + 0.15, z2 - 0.28);
+    b.geo('chrom', new THREE.CylinderGeometry(0.01, 0.01, 0.15, 8), sxc, h + 0.3, z2 - 0.21, 0, Math.PI / 2);
+    // Bodenmatte im Arbeitsgang
+    const gz1 = z2 + 0.05;
+    const gz2 = D - rb.tiefe - 0.05;
+    b.box('schwarz', [x1 + 0.1, x2 - 0.1, gz1, gz2], 0, 0.012);
+
     // --- Auf der Theke ---
-    // Zapfanlage mit drei Hähnen + Tropfschale
-    const tx = x1 + 1.35;
+    // Zapfanlage mit drei Hähnen + Tropfschale (Hähne zeigen zum Personal)
+    const tx = x1 + 1.5;
     const tz = (z1 + z2) / 2 + 0.05;
-    b.box('chrom', [tx - 0.28, tx + 0.28, tz - 0.08, tz + 0.08], h, h + 0.015);
-    b.geo('chrom', new THREE.CylinderGeometry(0.035, 0.045, 0.42, 14), tx, h + 0.21, tz + 0.04);
-    b.geo('chrom', new THREE.CylinderGeometry(0.03, 0.03, 0.5, 14), tx, h + 0.4, tz + 0.04, 0, 0, Math.PI / 2);
+    b.box('chrom', [tx - 0.28, tx + 0.28, tz, tz + 0.18], h, h + 0.015);
+    b.geo('chrom', new THREE.CylinderGeometry(0.035, 0.045, 0.42, 14), tx, h + 0.21, tz - 0.02);
+    b.geo('chrom', new THREE.CylinderGeometry(0.03, 0.03, 0.5, 14), tx, h + 0.4, tz - 0.02, 0, 0, Math.PI / 2);
     const tapCols = ['akzent', 'weiss', 'schwarz'];
     [-0.18, 0, 0.18].forEach((o, i) => {
-      b.geo('chrom', new THREE.CylinderGeometry(0.012, 0.012, 0.09, 8), tx + o, h + 0.35, tz - 0.01);
-      b.box(tapCols[i], [tx + o - 0.018, tx + o + 0.018, tz + 0.02, tz + 0.055], h + 0.42, h + 0.58);
+      b.geo('chrom', new THREE.CylinderGeometry(0.012, 0.012, 0.09, 8), tx + o, h + 0.35, tz + 0.03);
+      b.box(tapCols[i], [tx + o - 0.018, tx + o + 0.018, tz - 0.055, tz - 0.02], h + 0.42, h + 0.58);
     });
     // Untersetzer mit Gläsern an den Hockerplätzen
     const coaster = new THREE.CylinderGeometry(0.05, 0.05, 0.004, 20);
@@ -310,30 +409,34 @@ export class Decor {
       const s = this.card(extra, 'KARTE', 'Kaffee · Bier · Wein\nRille Mate', 0.16, 0.11, x, h + 0.06, z1 + 0.2, [0, -1], { pitch: -0.25 });
       s.material.side = THREE.DoubleSide;
     }
-    // Kassen-Tablet
-    b.geo('schwarz', new THREE.BoxGeometry(0.26, 0.18, 0.012), x2 - 0.35, h + 0.1, z1 + 0.35, Math.PI, -0.5);
-    b.geo('metall', new THREE.BoxGeometry(0.05, 0.08, 0.05), x2 - 0.35, h + 0.04, z1 + 0.37);
+    // Kassen-Tablet (zum Personal)
+    b.geo('schwarz', new THREE.BoxGeometry(0.26, 0.18, 0.012), x2 - 0.35, h + 0.1, z2 - 0.18, Math.PI, -0.5);
+    b.geo('metall', new THREE.BoxGeometry(0.05, 0.08, 0.05), x2 - 0.35, h + 0.04, z2 - 0.2);
     // Pflanze am Thekenende
     this.plant(b, x1 + 0.2, h, (z1 + z2) / 2, 0.45);
 
-    // --- Rückbuffet an der Wand (Gäste schauen darauf) ---
-    // Rückbuffet höher als die Theke, damit die Gäste die Geräte sehen (zwischen Theke und Wand ist wenig Platz)
-    const bz = D - 0.27;
-    const ey = 1.16;
-    b.box('korpus', [x1, x2, bz, D], 0, ey - 0.04);
-    b.box('holz', [x1 - 0.02, x2 + 0.02, bz - 0.01, D], ey - 0.04, ey);
-    // Glastür-Kühlschrank am Thekenende (zur Gästeseite)
-    const fx1 = x2 + 0.08;
-    const fx2 = x2 + 0.56;
-    b.box('metall', [fx1, fx2, D - 0.55, D], 0, 1.85);
-    b.box('schwarz', [fx1 + 0.03, fx2 - 0.03, D - 0.56, D - 0.55], 0.1, 1.72);
-    plane(extra, this.fridgeMat, fx2 - fx1 - 0.1, 1.5, (fx1 + fx2) / 2, 0.93, D - 0.565, [0, -1]);
-    b.box('chrom', [fx2 - 0.07, fx2 - 0.05, D - 0.6, D - 0.565], 0.7, 1.2); // Griff
-    this.card(extra, 'KALT', 'Rille Mate · Bier · Limo', 0.4, 0.15, (fx1 + fx2) / 2, 1.79, D - 0.562, [0, -1], { bg: '#e8772e', fg: '#1c1c1f', akzent: '#1c1c1f' });
-    ctx.colliders.push([fx1, fx2, D - 0.6, D]);
+    // --- Rückbuffet an der Wand ---
+    const bz = D - rb.tiefe;
+    const ey = rb.hoehe;
+    // Kühlschrank mit Glastür als Teil des Rückbuffets (rechts)
+    const fx1 = x2 - 0.62;
+    const fx2 = x2 - 0.02;
+    b.box('korpus', [x1, fx1 - 0.02, bz, D], 0, ey - 0.04);
+    b.box('holz', [x1 - 0.02, fx1, bz - 0.02, D], ey - 0.04, ey);
+    // Schranktüren mit Griffen (zum Personal)
+    for (let x = x1 + 0.05; x < fx1 - 0.4; x += 0.6) {
+      b.box('holzHell', [x, x + 0.56, bz - 0.012, bz], 0.08, ey - 0.08);
+      b.box('metall', [x + 0.24, x + 0.32, bz - 0.03, bz - 0.012], ey - 0.2, ey - 0.18);
+    }
+    b.box('metall', [fx1, fx2, bz - 0.2, D], 0, 1.85);
+    b.box('schwarz', [fx1 + 0.03, fx2 - 0.03, bz - 0.21, bz - 0.2], 0.1, 1.72);
+    plane(extra, this.fridgeMat, fx2 - fx1 - 0.1, 1.5, (fx1 + fx2) / 2, 0.93, bz - 0.215, [0, -1]);
+    b.box('chrom', [fx1 + 0.05, fx1 + 0.07, bz - 0.25, bz - 0.215], 0.7, 1.2); // Griff
+    this.card(extra, 'KALT', 'Rille Mate · Bier · Limo', 0.4, 0.15, (fx1 + fx2) / 2, 1.79, bz - 0.212, [0, -1], { bg: '#e8772e', fg: '#1c1c1f', akzent: '#1c1c1f' });
+    ctx.colliders.push([x1, fx1, bz - 0.02, D], [fx1, fx2, bz - 0.22, D]);
     // Espressomaschine
     const ex = x1 + 0.45;
-    const ez = D - 0.13;
+    const ez = D - rb.tiefe / 2;
     b.box('chrom', [ex - 0.32, ex + 0.32, ez - 0.12, ez + 0.12], ey, ey + 0.38);
     b.box('schwarz', [ex - 0.33, ex + 0.33, ez - 0.13, ez - 0.11], ey + 0.3, ey + 0.34);
     b.box('akzent', [ex - 0.33, ex + 0.33, ez - 0.13, ez - 0.12], ey + 0.02, ey + 0.05);
@@ -360,17 +463,18 @@ export class Decor {
       b.geo('schwarz', new THREE.CylinderGeometry(0.035, 0.035, 0.01, 12), dx + o, ey + 0.27, ez - 0.135, 0, Math.PI / 2);
     }
     ctx.covers.front(b, { x: dx + 0.85, y: ey + COVER / 2 + 0.01, z: D - 0.06, yaw: 0, pitch: -0.1 });
-    this.card(extra, 'JETZT LÄUFT', 'an der Bar', 0.2, 0.13, dx + 0.85, ey + 0.05, D - 0.22, [0, -1], { pitch: -0.4 });
+    this.card(extra, 'JETZT LÄUFT', 'an der Bar', 0.2, 0.13, dx + 0.85, ey + 0.05, D - 0.24, [0, -1], { pitch: -0.4 });
 
     // --- Wandregale mit Flaschen und Gläsern, LED darunter ---
     const shelves = [1.55, 1.86];
     const sx1 = x1 + 1.1; // links steht die Espressomaschine
+    const sx2 = fx1 - 0.08; // rechts der Kühlschrank
     shelves.forEach((y, si) => {
-      b.box('holz', [sx1, x2 - 0.1, D - 0.24, D], y - 0.03, y);
-      b.instance('bar-ledwarm', this.geo.box, MAT.ledWarm, { x: (sx1 + x2 - 0.1) / 2, y: y - 0.035, z: D - 0.2, scale: [x2 - 0.1 - sx1 - 0.1, 0.006, 0.012] });
+      b.box('holz', [sx1, sx2, D - 0.24, D], y - 0.03, y);
+      b.instance('bar-ledwarm', this.geo.box, MAT.ledWarm, { x: (sx1 + sx2) / 2, y: y - 0.035, z: D - 0.2, scale: [sx2 - sx1 - 0.1, 0.006, 0.012] });
       let x = sx1 + 0.12;
       let n = si * 3;
-      while (x < x2 - 0.2) {
+      while (x < sx2 - 0.1) {
         if (si === 0 && x > x1 + 1.8 && x < x1 + 2.7) {
           // Gläserreihe in der Mitte des unteren Regals
           this.glass(b, x, y, D - 0.12);
@@ -389,10 +493,104 @@ export class Decor {
       b.geo('metall', new THREE.CylinderGeometry(0.025, 0.025, 0.74, 10), x, 0.39, z);
       b.geo('chrom', new THREE.TorusGeometry(0.16, 0.012, 6, 22), x, 0.32, z, 0, Math.PI / 2);
       b.geo('polster', new THREE.CylinderGeometry(0.2, 0.18, 0.08, 22), x, 0.8, z);
-      // Rückenlehne auf der Gästeseite: zwei Streben + gebogenes Polster
+      // Rückenlehne auf der Gästeseite: zwei Streben + Polster
       for (const o of [-0.12, 0.12]) b.geo('chrom', new THREE.CylinderGeometry(0.01, 0.01, 0.3, 6), x + o, 0.97, z - 0.16);
       b.box('polster', [x - 0.17, x + 0.17, z - 0.19, z - 0.15], 1.02, 1.14);
     }
+  }
+
+  // ======================= KASSE =======================
+  // Personal steht zwischen Theke und Frontwand (z < z1), Kunden auf der Ladenseite (z > z2).
+  kasse(b, m, ctx) {
+    const [x1, x2, z1, z2] = m.rechteck;
+    const h = m.hoehe;
+    const extra = ctx.extra;
+    const xc = x1 + (x2 - x1) * 0.55;
+
+    // --- Theke ---
+    b.box('korpus', [x1, x2, z1 + 0.05, z2 - 0.04], 0, h - 0.05);
+    b.box('holz', [x1 - 0.05, x2 + 0.05, z1 - 0.03, z2 + 0.1], h - 0.05, h);
+    // Lattenfront zur Kundenseite + LED unter der Platte
+    for (let x = x1 + 0.03; x < x2 - 0.02; x += 0.07) b.instance('kasse-latte', this.geo.box, ctx.mats.holz, { x, y: (h - 0.12) / 2 + 0.05, z: z2 - 0.025, scale: [0.04, h - 0.17, 0.03] });
+    b.instance('kasse-led', this.geo.box, MAT.led, { x: (x1 + x2) / 2, y: h - 0.065, z: z2 + 0.08, scale: [x2 - x1 + 0.08, 0.012, 0.012] });
+    b.box('korpus', [(x1 + x2) / 2 - 0.42, (x1 + x2) / 2 + 0.42, z2 - 0.01, z2 + 0.005], 0.35, 0.7);
+    this.card(extra, 'RILLE 33', 'Plattenladen & Listening Bar', 0.8, 0.3, (x1 + x2) / 2, 0.525, z2 + 0.007, [0, 1]);
+    // Kassenlade und Fach auf der Personalseite
+    b.box('schwarz', [xc - 0.22, xc + 0.22, z1 + 0.03, z1 + 0.05], h - 0.25, h - 0.1);
+    b.box('metall', [xc - 0.05, xc + 0.05, z1 + 0.01, z1 + 0.03], h - 0.19, h - 0.17);
+    b.box('korpus', [x1 + 0.05, x1 + 0.9, z1 + 0.05, z1 + 0.06], 0.1, 0.12);
+
+    // --- Kassensystem ---
+    // Bildschirm zum Personal
+    b.box('metall', [xc - 0.04, xc + 0.04, z1 + 0.3, z1 + 0.38], h, h + 0.14);
+    b.box('metall', [xc - 0.12, xc + 0.12, z1 + 0.22, z1 + 0.46], h, h + 0.012);
+    b.geo('schwarz', new THREE.BoxGeometry(0.36, 0.25, 0.025), xc, h + 0.27, z1 + 0.34, 0, -0.25);
+    plane(extra, this.posMat, 0.32, 0.21, xc, h + 0.27, z1 + 0.325, [0, -1], -0.25);
+    // Kundendisplay (zum Kunden)
+    const kx = xc + 0.34;
+    b.geo('metall', new THREE.CylinderGeometry(0.012, 0.012, 0.22, 8), kx, h + 0.11, z1 + 0.42);
+    b.geo('schwarz', new THREE.BoxGeometry(0.2, 0.12, 0.02), kx, h + 0.26, z1 + 0.43, 0, 0.2);
+    plane(extra, this.kundeMat, 0.18, 0.1, kx, h + 0.26, z1 + 0.442, [0, 1], 0.2);
+    // Bondrucker mit Bon
+    const px = xc - 0.35;
+    b.box('schwarz', [px - 0.08, px + 0.08, z1 + 0.25, z1 + 0.45], h, h + 0.12);
+    b.geo('weiss', new THREE.BoxGeometry(0.07, 0.16, 0.002), px, h + 0.18, z1 + 0.3, 0, -0.3);
+    // Kartenterminal auf der Kundenseite
+    const tx = xc + 0.1;
+    b.geo('schwarz', new THREE.BoxGeometry(0.09, 0.03, 0.17), tx, h + 0.03, z2 - 0.15, 0, 0.3);
+    plane(extra, this.terminalMat, 0.08, 0.15, tx, h + 0.052, z2 - 0.153, [0, 1], -Math.PI / 2 + 0.3);
+
+    // --- Auf der Theke ---
+    // bedruckte Tragetaschen (stehend) am linken Ende
+    for (let i = 0; i < 3; i++) {
+      b.instance('tragetasche', this.geo.box, this.bagMat, { x: x1 + 0.2 + i * 0.06, y: h + 0.17, z: z1 + 0.35 + i * 0.03, yaw: 0.15 - i * 0.08, scale: [0.26, 0.32, 0.1] });
+    }
+    // Impulskorb mit Stickern und Buttons (zum Kunden)
+    const ix = x2 - 0.55;
+    const iz = z2 - 0.18;
+    b.box('holz', [ix - 0.17, ix + 0.17, iz - 0.1, iz + 0.1], h, h + 0.012);
+    for (const [a, e, c, d] of [[-0.17, 0.17, -0.1, -0.09], [-0.17, 0.17, 0.09, 0.1], [-0.17, -0.16, -0.1, 0.1], [0.16, 0.17, -0.1, 0.1]]) b.box('holz', [ix + a, ix + e, iz + c, iz + d], h, h + 0.08);
+    const cols = ['#e8772e', '#f2c230', '#2f6fd6', '#3fbf7f', '#b56576', '#f4f1ec'];
+    for (let i = 0; i < 26; i++) {
+      const r = ctx.rand;
+      b.instance('button', this.geo.cyl, MAT.papier, { x: ix - 0.13 + r() * 0.26, y: h + 0.02 + r() * 0.03, z: iz - 0.07 + r() * 0.14, pitch: r() * 0.6, roll: r() * 0.6, scale: [0.022, 0.006, 0.022], color: cols[i % cols.length] });
+    }
+    this.card(extra, 'STICKER & BUTTONS', 'ab 1 €', 0.2, 0.09, ix, h + 0.13, iz + 0.101, [0, 1], { pitch: 0.2 });
+    // Gutschein-Aufsteller
+    this.card(extra, 'GUTSCHEIN', 'Das Geschenk für\nPlattenfans', 0.24, 0.16, x2 - 0.15, h + 0.1, z2 - 0.05, [0, 1], { pitch: 0.25, bg: '#e8772e', fg: '#1c1c1f', akzent: '#1c1c1f' });
+
+    // --- Hängendes Schild ---
+    const sx = (x1 + x2) / 2;
+    const sz = (z1 + z2) / 2;
+    for (const o of [-0.4, 0.4]) b.box('schwarz', [sx + o - 0.004, sx + o + 0.004, sz - 0.004, sz + 0.004], 2.55, 3.2);
+    b.box('korpus', [sx - 0.5, sx + 0.5, sz - 0.02, sz + 0.02], 2.3, 2.58);
+    this.card(extra, 'KASSE', 'Karte · Bar · Gutschein', 0.96, 0.26, sx, 2.44, sz + 0.022, [0, 1]);
+    this.card(extra, 'KASSE', 'Karte · Bar · Gutschein', 0.96, 0.26, sx, 2.44, sz - 0.022, [0, -1]);
+
+    // --- Bodenaufkleber für die Warteschlange (an der Zubehör-Gondel) ---
+    const floor = plane(extra, lit(TEX.boden()), 0.7, 0.35, x1 - 0.35, 0.007, z2 + 0.9, [0, 1], -Math.PI / 2);
+    floor.rotation.set(-Math.PI / 2, 0, Math.PI); // lesbar für Wartende, die zur Kasse schauen
+
+    // --- Regal „Abholung“ hinter der Kasse an der Frontwand ---
+    const ax1 = x1 + 0.3;
+    const ax2 = x2 - 0.2;
+    const az1 = 0.02;
+    const az2 = 0.36;
+    for (const x of [ax1, ax2 - 0.03]) b.box('holz', [x, x + 0.03, az1, az2], 0, 1.85);
+    const levels = [0.08, 0.6, 1.12, 1.62];
+    levels.forEach((y, li) => {
+      b.box('holz', [ax1, ax2, az1, az2], y - 0.025, y);
+      if (li === levels.length - 1) return;
+      for (let x = ax1 + 0.12; x < ax2 - 0.1; x += 0.023) {
+        if (ctx.rand() < 0.12) continue;
+        ctx.covers.record(b, { x, y: y + COVER / 2, z: (az1 + az2) / 2, yaw: Math.PI / 2, pitch: 0 });
+        // Namenszettel ragen heraus
+        if (ctx.rand() < 0.2) b.instance('zettel', this.geo.box, MAT.papier, { x, y: y + COVER + 0.03, z: (az1 + az2) / 2 + 0.05, scale: [0.004, 0.06, 0.05] });
+      }
+    });
+    b.box('korpus', [ax1, ax2, az1, az2], 1.85, 1.88);
+    this.card(extra, 'ABHOLUNG', 'Vorbestellungen · nach Namen', 0.8, 0.26, (ax1 + ax2) / 2, 2.05, az2 - 0.14, [0, 1]);
+    ctx.colliders.push([ax1, ax2, 0, az2]);
   }
 
   // ======================= Wanddeko =======================
@@ -500,24 +698,6 @@ export class Decor {
         const label = m.id === 'M5' ? 'A – M' : 'N – Z';
         b.box('metall', [xm - 0.015, xm + 0.015, z1 + 0.05, z1 + 0.08], base, base + 0.32);
         this.card(extra, `SECOND-HAND ${label}`, 'ab 5 € · geprüft & gereinigt', 0.44, 0.21, xm, base + 0.42, z1 + 0.045, [0, -1], { bg: '#8b5a2b' });
-        break;
-      }
-      case 'kasse': {
-        const h = m.hoehe;
-        const xc = x1 + (x2 - x1) * 0.6;
-        // Bildschirm mit Kassenoberfläche (zum Personal)
-        plane(extra, this.posMat, 0.3, 0.2, xc, h + 0.26, z1 + 0.33, [0, -1], -0.25);
-        // Hängendes Schild über der Kasse
-        const sx = (x1 + x2) / 2;
-        const sz = (z1 + z2) / 2;
-        for (const o of [-0.4, 0.4]) b.box('schwarz', [sx + o - 0.004, sx + o + 0.004, sz - 0.004, sz + 0.004], 2.55, 3.2);
-        b.box('korpus', [sx - 0.5, sx + 0.5, sz - 0.02, sz + 0.02], 2.3, 2.58);
-        this.card(extra, 'KASSE', 'Karte · Bar · Gutschein', 0.96, 0.26, sx, 2.44, sz + 0.022, [0, 1]);
-        this.card(extra, 'KASSE', 'Karte · Bar · Gutschein', 0.96, 0.26, sx, 2.44, sz - 0.022, [0, -1]);
-        // Gutschein-Aufsteller zur Kundenseite
-        this.card(extra, 'GUTSCHEIN', 'Das Geschenk für\nPlattenfans', 0.24, 0.16, x2 - 0.2, h + 0.1, z2 - 0.1, [0, 1], { pitch: 0.25, bg: '#e8772e', fg: '#1c1c1f', akzent: '#1c1c1f' });
-        // Papiertüten mit Logo gestapelt
-        for (let i = 0; i < 5; i++) b.instance('tuete', this.geo.box, MAT.papier, { x: x1 + 0.3, y: h + 0.006 + i * 0.012, z: z1 + 0.35, yaw: i * 0.05, scale: [0.32, 0.01, 0.4] });
         break;
       }
       case 'hardware-wand': {
