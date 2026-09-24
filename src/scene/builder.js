@@ -1,6 +1,8 @@
 // Sammelt viele einfache Teile und fasst sie zu wenigen Draw Calls zusammen (wichtig für 60 fps auf dem iPad).
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import config from '../config.js';
 
 const unitBox = new THREE.BoxGeometry(1, 1, 1);
 const tmp = new THREE.Object3D();
@@ -19,9 +21,19 @@ export class Builder {
   }
 
   // Quader über Store-Rechteck [x1, x2, z1, z2] von Höhe y0 bis y1
+  // Kanten werden leicht abgerundet (weniger „blocky“); sehr dünne Teile bleiben eckig.
   box(mat, [x1, x2, z1, z2], y0, y1) {
-    const g = unitBox.clone();
-    g.scale(Math.abs(x2 - x1), y1 - y0, Math.abs(z2 - z1));
+    const w = Math.abs(x2 - x1);
+    const h = y1 - y0;
+    const d = Math.abs(z2 - z1);
+    const r = Math.min(config.grafik.kantenRadius, Math.min(w, h, d) * 0.25);
+    let g;
+    if (config.grafik.kantenRadius > 0 && r >= 0.003) {
+      g = new RoundedBoxGeometry(w, h, d, 1, r);
+    } else {
+      g = unitBox.clone();
+      g.scale(w, h, d);
+    }
     g.translate((x1 + x2) / 2, (y0 + y1) / 2, -(z1 + z2) / 2);
     this.add(mat, g);
   }

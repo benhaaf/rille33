@@ -158,5 +158,37 @@ export function buildWallDetails(layout) {
     }
     if (x < w.len) b.box('akzent', w.rect(x, w.len), y, y + 0.05);
   }
+  // Sockelleisten an allen Wänden (ausgespart an Türen)
+  b.materials.sockel = new THREE.MeshStandardMaterial({ color: 0x1b1b1d, roughness: 0.6 });
+  const sh = 0.08;
+  const st = 0.015;
+  const sockel = {
+    front: (a, e) => [a, e, 0, st],
+    rueck: (a, e) => [a, e, D - st, D],
+    links: (a, e) => [0, st, a, e],
+    rechts: (a, e) => [W - st, W, a, e],
+  };
+  for (const [name, rect] of Object.entries(sockel)) {
+    const len = name === 'front' || name === 'rueck' ? W : D;
+    const cuts = layout.oeffnungen.filter((o) => o.wand === name && (o.unten ?? 0) === 0).sort((a, e) => a.von - e.von);
+    let x = 0;
+    for (const c of cuts) {
+      if (c.von > x) b.box('sockel', rect(x, c.von), 0, sh);
+      x = c.bis;
+    }
+    if (x < len) b.box('sockel', rect(x, len), 0, sh);
+  }
+  // Lagerwände (Ladenseite)
+  for (const w of layout.innenwaende || []) {
+    const [ax, az] = w.von;
+    const [bx, bz] = w.bis;
+    const half = 0.05;
+    if (ax === bx) {
+      const pieces = w.tuer ? [[Math.min(az, bz), w.tuer.von], [w.tuer.bis, Math.max(az, bz)]] : [[Math.min(az, bz), Math.max(az, bz)]];
+      for (const [p1, p2] of pieces) if (p2 > p1) b.box('sockel', [ax + half, ax + half + st, p1, p2], 0, sh);
+    } else {
+      b.box('sockel', [Math.min(ax, bx), Math.max(ax, bx), az - half - st, az - half], 0, sh);
+    }
+  }
   return b.build('Wanddetails');
 }

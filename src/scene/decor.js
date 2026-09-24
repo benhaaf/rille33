@@ -2,6 +2,7 @@
 // Stil wie beim Zubehör: einfache Formen + selbst gezeichnete Canvas-Texturen, viel instanziert.
 import * as THREE from 'three';
 import { yawFacing } from './builder.js';
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { canvasTex, fitText, priceLabel } from './accessories.js';
 import { COVER } from './covers.js';
 
@@ -307,9 +308,9 @@ export class Decor {
       mat: lit(TEX.flasche(bt.glass, bt.label, bt.name, bt.sub, bt.band), { roughness: 0.25, metalness: 0.05 }),
     }));
     this.geo = {
-      box: new THREE.BoxGeometry(1, 1, 1),
-      cyl: new THREE.CylinderGeometry(1, 1, 1, 16),
-      glas: new THREE.CylinderGeometry(0.034, 0.028, 0.14, 14, 1, true),
+      box: new RoundedBoxGeometry(1, 1, 1, 1, 0.08),
+      cyl: new THREE.CylinderGeometry(1, 1, 1, 32),
+      glas: new THREE.CylinderGeometry(0.034, 0.028, 0.14, 28, 1, true),
       sphere: new THREE.SphereGeometry(1, 10, 8),
       leaf: new THREE.PlaneGeometry(0.16, 0.5),
     };
@@ -378,8 +379,8 @@ export class Decor {
     const sxc = x1 + 0.7;
     b.box('chrom', [sxc - 0.25, sxc + 0.25, z2 - 0.3, z2 - 0.02], h, h + 0.006);
     b.box('schwarz', [sxc - 0.2, sxc + 0.2, z2 - 0.26, z2 - 0.06], h + 0.006, h + 0.008);
-    b.geo('chrom', new THREE.CylinderGeometry(0.012, 0.012, 0.3, 8), sxc, h + 0.15, z2 - 0.28);
-    b.geo('chrom', new THREE.CylinderGeometry(0.01, 0.01, 0.15, 8), sxc, h + 0.3, z2 - 0.21, 0, Math.PI / 2);
+    b.geo('chrom', new THREE.CylinderGeometry(0.012, 0.012, 0.3, 20), sxc, h + 0.15, z2 - 0.28);
+    b.geo('chrom', new THREE.CylinderGeometry(0.01, 0.01, 0.15, 20), sxc, h + 0.3, z2 - 0.21, 0, Math.PI / 2);
     // Bodenmatte im Arbeitsgang
     const gz1 = z2 + 0.05;
     const gz2 = D - rb.tiefe - 0.05;
@@ -390,11 +391,11 @@ export class Decor {
     const tx = x1 + 1.5;
     const tz = (z1 + z2) / 2 + 0.05;
     b.box('chrom', [tx - 0.28, tx + 0.28, tz, tz + 0.18], h, h + 0.015);
-    b.geo('chrom', new THREE.CylinderGeometry(0.035, 0.045, 0.42, 14), tx, h + 0.21, tz - 0.02);
-    b.geo('chrom', new THREE.CylinderGeometry(0.03, 0.03, 0.5, 14), tx, h + 0.4, tz - 0.02, 0, 0, Math.PI / 2);
+    b.geo('chrom', new THREE.CylinderGeometry(0.035, 0.045, 0.42, 28), tx, h + 0.21, tz - 0.02);
+    b.geo('chrom', new THREE.CylinderGeometry(0.03, 0.03, 0.5, 28), tx, h + 0.4, tz - 0.02, 0, 0, Math.PI / 2);
     const tapCols = ['akzent', 'weiss', 'schwarz'];
     [-0.18, 0, 0.18].forEach((o, i) => {
-      b.geo('chrom', new THREE.CylinderGeometry(0.012, 0.012, 0.09, 8), tx + o, h + 0.35, tz + 0.03);
+      b.geo('chrom', new THREE.CylinderGeometry(0.012, 0.012, 0.09, 20), tx + o, h + 0.35, tz + 0.03);
       b.box(tapCols[i], [tx + o - 0.018, tx + o + 0.018, tz - 0.055, tz - 0.02], h + 0.42, h + 0.58);
     });
     // Untersetzer mit Gläsern an den Hockerplätzen
@@ -441,7 +442,7 @@ export class Decor {
     b.box('schwarz', [ex - 0.33, ex + 0.33, ez - 0.13, ez - 0.11], ey + 0.3, ey + 0.34);
     b.box('akzent', [ex - 0.33, ex + 0.33, ez - 0.13, ez - 0.12], ey + 0.02, ey + 0.05);
     for (const o of [-0.16, 0.16]) {
-      b.geo('chrom', new THREE.CylinderGeometry(0.035, 0.035, 0.05, 12), ex + o, ey + 0.22, ez - 0.15);
+      b.geo('chrom', new THREE.CylinderGeometry(0.035, 0.035, 0.05, 24), ex + o, ey + 0.22, ez - 0.15);
       b.box('schwarz', [ex + o - 0.015, ex + o + 0.015, ez - 0.3, ez - 0.17], ey + 0.19, ey + 0.21); // Siebträgergriff
       b.instance('tasse', this.geo.cyl, MAT.tasse, { x: ex + o, y: ey + 0.03, z: ez - 0.15, scale: [0.03, 0.05, 0.03] });
     }
@@ -449,18 +450,18 @@ export class Decor {
     // Kaffeemühle
     const gx = ex + 0.52;
     b.box('schwarz', [gx - 0.08, gx + 0.08, ez - 0.1, ez + 0.08], ey, ey + 0.3);
-    b.geo('glas', new THREE.CylinderGeometry(0.08, 0.04, 0.2, 14), gx, ey + 0.4, ez - 0.01);
-    b.geo('erde', new THREE.CylinderGeometry(0.06, 0.035, 0.1, 14), gx, ey + 0.36, ez - 0.01);
+    b.geo('glas', new THREE.CylinderGeometry(0.08, 0.04, 0.2, 28), gx, ey + 0.4, ez - 0.01);
+    b.geo('erde', new THREE.CylinderGeometry(0.06, 0.035, 0.1, 28), gx, ey + 0.36, ez - 0.01);
     // DJ-Plattenspieler mit Boxen + „Jetzt läuft“
     const dx = x1 + 2.2;
     b.box('schwarz', [dx - 0.25, dx + 0.25, ez - 0.17, ez + 0.13], ey, ey + 0.09);
     b.geo('schwarz', new THREE.CylinderGeometry(0.15, 0.15, 0.02, 28), dx - 0.03, ey + 0.1, ez - 0.02);
-    b.geo('akzent', new THREE.CylinderGeometry(0.045, 0.045, 0.022, 16), dx - 0.03, ey + 0.1, ez - 0.02);
+    b.geo('akzent', new THREE.CylinderGeometry(0.045, 0.045, 0.022, 32), dx - 0.03, ey + 0.1, ez - 0.02);
     b.geo('chrom', new THREE.BoxGeometry(0.012, 0.012, 0.22), dx + 0.16, ey + 0.12, ez - 0.02, 0.3);
     for (const o of [-0.5, 0.5]) {
       b.box('korpus', [dx + o - 0.11, dx + o + 0.11, ez - 0.13, ez + 0.12], ey, ey + 0.34);
-      b.geo('schwarz', new THREE.CylinderGeometry(0.075, 0.075, 0.01, 16), dx + o, ey + 0.12, ez - 0.135, 0, Math.PI / 2);
-      b.geo('schwarz', new THREE.CylinderGeometry(0.035, 0.035, 0.01, 12), dx + o, ey + 0.27, ez - 0.135, 0, Math.PI / 2);
+      b.geo('schwarz', new THREE.CylinderGeometry(0.075, 0.075, 0.01, 32), dx + o, ey + 0.12, ez - 0.135, 0, Math.PI / 2);
+      b.geo('schwarz', new THREE.CylinderGeometry(0.035, 0.035, 0.01, 24), dx + o, ey + 0.27, ez - 0.135, 0, Math.PI / 2);
     }
     ctx.covers.front(b, { x: dx + 0.85, y: ey + COVER / 2 + 0.01, z: D - 0.06, yaw: 0, pitch: -0.1 });
     this.card(extra, 'JETZT LÄUFT', 'an der Bar', 0.2, 0.13, dx + 0.85, ey + 0.05, D - 0.24, [0, -1], { pitch: -0.4 });
@@ -490,11 +491,11 @@ export class Decor {
     for (const x of m.hocker_x) {
       const z = m.hocker_z;
       b.geo('metall', new THREE.CylinderGeometry(0.21, 0.23, 0.03, 20), x, 0.015, z);
-      b.geo('metall', new THREE.CylinderGeometry(0.025, 0.025, 0.74, 10), x, 0.39, z);
+      b.geo('metall', new THREE.CylinderGeometry(0.025, 0.025, 0.74, 20), x, 0.39, z);
       b.geo('chrom', new THREE.TorusGeometry(0.16, 0.012, 6, 22), x, 0.32, z, 0, Math.PI / 2);
       b.geo('polster', new THREE.CylinderGeometry(0.2, 0.18, 0.08, 22), x, 0.8, z);
       // Rückenlehne auf der Gästeseite: zwei Streben + Polster
-      for (const o of [-0.12, 0.12]) b.geo('chrom', new THREE.CylinderGeometry(0.01, 0.01, 0.3, 6), x + o, 0.97, z - 0.16);
+      for (const o of [-0.12, 0.12]) b.geo('chrom', new THREE.CylinderGeometry(0.01, 0.01, 0.3, 20), x + o, 0.97, z - 0.16);
       b.box('polster', [x - 0.17, x + 0.17, z - 0.19, z - 0.15], 1.02, 1.14);
     }
   }
@@ -528,7 +529,7 @@ export class Decor {
     plane(extra, this.posMat, 0.32, 0.21, xc, h + 0.27, z1 + 0.325, [0, -1], -0.25);
     // Kundendisplay (zum Kunden)
     const kx = xc + 0.34;
-    b.geo('metall', new THREE.CylinderGeometry(0.012, 0.012, 0.22, 8), kx, h + 0.11, z1 + 0.42);
+    b.geo('metall', new THREE.CylinderGeometry(0.012, 0.012, 0.22, 20), kx, h + 0.11, z1 + 0.42);
     b.geo('schwarz', new THREE.BoxGeometry(0.2, 0.12, 0.02), kx, h + 0.26, z1 + 0.43, 0, 0.2);
     plane(extra, this.kundeMat, 0.18, 0.1, kx, h + 0.26, z1 + 0.442, [0, 1], 0.2);
     // Bondrucker mit Bon
@@ -642,7 +643,7 @@ export class Decor {
 
   // Topfpflanze: Topf + Blätter (s = Größenfaktor)
   plant(b, x, y, z, s = 1) {
-    b.geo('korpus', new THREE.CylinderGeometry(0.2 * s, 0.15 * s, 0.4 * s, 16), x, y + 0.2 * s, z);
+    b.geo('korpus', new THREE.CylinderGeometry(0.2 * s, 0.15 * s, 0.4 * s, 32), x, y + 0.2 * s, z);
     b.instance('erde', this.geo.cyl, MAT.erde, { x, y: y + 0.39 * s, z, scale: [0.18 * s, 0.02, 0.18 * s] });
     const n = 24;
     for (let i = 0; i < n; i++) {
@@ -721,9 +722,9 @@ export class Decor {
         for (let i = 0; i < 4; i++) b.instance('prospekt', this.geo.box, i % 2 ? ctx.mats.akzent : MAT.papier, { x: x1 + 0.2, y: h + 0.004 + i * 0.004, z: z2 - 0.3 + i * 0.01, yaw: i * 0.15, scale: [0.21, 0.003, 0.3] });
         // Hocker auf Kundenseite
         const sx = x1 - 0.35;
-        b.geo('metall', new THREE.CylinderGeometry(0.02, 0.02, 0.62, 8), sx, 0.31, zc);
-        b.geo('metall', new THREE.CylinderGeometry(0.18, 0.18, 0.02, 16), sx, 0.01, zc);
-        b.geo('polster', new THREE.CylinderGeometry(0.17, 0.17, 0.06, 18), sx, 0.64, zc);
+        b.geo('metall', new THREE.CylinderGeometry(0.02, 0.02, 0.62, 20), sx, 0.31, zc);
+        b.geo('metall', new THREE.CylinderGeometry(0.18, 0.18, 0.02, 32), sx, 0.01, zc);
+        b.geo('polster', new THREE.CylinderGeometry(0.17, 0.17, 0.06, 36), sx, 0.64, zc);
         ctx.colliders.push([sx - 0.18, sx + 0.18, zc - 0.18, zc + 0.18]);
         break;
       }

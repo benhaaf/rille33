@@ -25,7 +25,7 @@ const MATERIALS = {
 
 // Wiederverwendete Geometrien
 const G = {
-  disc: (r, h, seg = 24) => new THREE.CylinderGeometry(r, r, h, seg),
+  disc: (r, h, seg = 32) => new THREE.CylinderGeometry(r, r, h, seg),
   box: (w, h, d) => new THREE.BoxGeometry(w, h, d),
 };
 
@@ -217,7 +217,7 @@ const BUILDERS = {
     const h = m.hoehe;
     for (const [x, z] of m.stationen) {
       b.geo('metall', G.disc(0.24, 0.03), x, 0.015, z);
-      b.geo('metall', G.disc(0.035, h - 0.04, 12), x, (h - 0.04) / 2, z);
+      b.geo('metall', G.disc(0.035, h - 0.04, 20), x, (h - 0.04) / 2, z);
       b.geo('holz', G.disc(r, 0.04, 32), x, h - 0.02, z);
       // Plattenspieler, Front Richtung Laden (Kunde steht auf der Ladenseite)
       turntable(b, x, h, z + 0.05, [0, -1], 'weiss');
@@ -225,8 +225,8 @@ const BUILDERS = {
       const hx = x + 0.23;
       const hz = z - 0.12;
       b.geo('schwarz', new THREE.TorusGeometry(0.075, 0.01, 6, 16, Math.PI), hx, h + 0.012, hz, 0, -Math.PI / 2);
-      b.geo('schwarz', G.disc(0.04, 0.03, 12), hx + 0.075, h + 0.015, hz);
-      b.geo('schwarz', G.disc(0.04, 0.03, 12), hx - 0.075, h + 0.015, hz);
+      b.geo('schwarz', G.disc(0.04, 0.03, 20), hx + 0.075, h + 0.015, hz);
+      b.geo('schwarz', G.disc(0.04, 0.03, 20), hx - 0.075, h + 0.015, hz);
     }
   },
 
@@ -253,7 +253,7 @@ const BUILDERS = {
     for (const x of m.hocker_x) {
       const z = m.hocker_z;
       b.geo('metall', G.disc(0.21, 0.02), x, 0.01, z);
-      b.geo('metall', G.disc(0.025, 0.74, 10), x, 0.39, z);
+      b.geo('metall', G.disc(0.025, 0.74, 20), x, 0.39, z);
       b.geo('chrom', new THREE.TorusGeometry(0.15, 0.012, 6, 20), x, 0.3, z, 0, Math.PI / 2);
       b.geo('polster', G.disc(0.19, 0.07), x, 0.79, z);
     }

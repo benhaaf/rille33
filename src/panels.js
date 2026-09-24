@@ -7,10 +7,12 @@ export class Panels {
     root.insertAdjacentHTML(
       'beforeend',
       `<aside id="infocard" hidden aria-live="polite"></aside>
+       <section id="slide" hidden aria-live="polite"></section>
        <div id="station-indicator" hidden></div>
        <div id="rahmen" hidden role="dialog" aria-label="Rahmendaten"><div class="rahmen-box"></div></div>`,
     );
     this.card = root.querySelector('#infocard');
+    this.slide = root.querySelector('#slide');
     this.indicator = root.querySelector('#station-indicator');
     this.rahmen = root.querySelector('#rahmen');
     this.rahmen.addEventListener('pointerdown', () => this.toggleRahmen(false));
@@ -42,6 +44,46 @@ export class Panels {
 
   get cardVisible() {
     return !this.card.hidden;
+  }
+
+  // ---------- Folien: Einleitung, Fazit, Quellen ----------
+  showSlide(sl, stationCount) {
+    let body = '';
+    if (sl.typ === 'einleitung') {
+      body = `
+        <p class="sl-kicker">${esc(sl.zeile)}</p>
+        <h1 class="sl-title">${esc(sl.titel)}</h1>
+        <p class="sl-sub">${esc(sl.untertitel)}</p>
+        <p class="sl-frage"><span>Leitfrage</span>${esc(sl.fragestellung)}</p>
+        <h3>Ablauf</h3>
+        <ol class="sl-agenda">${sl.agenda.map((a) => `<li>${esc(a)}</li>`).join('')}</ol>
+        <p class="sl-team">${esc(sl.team)}</p>`;
+    } else if (sl.typ === 'schluss') {
+      body = `
+        <p class="sl-kicker">Rundgang abgeschlossen · ${stationCount} Stationen</p>
+        <h1 class="sl-title">${esc(sl.titel)}</h1>
+        <ul class="sl-punkte">${sl.punkte.map((a) => `<li>${esc(a)}</li>`).join('')}</ul>
+        ${sl.ausblick ? `<p class="sl-frage"><span>Ausblick</span>${esc(sl.ausblick)}</p>` : ''}`;
+    } else if (sl.typ === 'quellen') {
+      body = `
+        <h1 class="sl-title">${esc(sl.titel)}</h1>
+        <ol class="sl-quellen">${sl.liste.map((a) => `<li>${esc(a)}</li>`).join('')}</ol>
+        ${sl.hinweise ? `<ul class="sl-hinweise">${sl.hinweise.map((a) => `<li>${esc(a)}</li>`).join('')}</ul>` : ''}`;
+    }
+    this.slide.className = `sl-${sl.typ}`;
+    this.slide.innerHTML = body;
+    this.slide.hidden = false;
+    this.slide.classList.remove('ic-in');
+    void this.slide.offsetWidth;
+    this.slide.classList.add('ic-in');
+  }
+
+  hideSlide() {
+    this.slide.hidden = true;
+  }
+
+  get slideVisible() {
+    return !this.slide.hidden;
   }
 
   setIndicator(text) {

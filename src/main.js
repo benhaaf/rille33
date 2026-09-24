@@ -164,9 +164,18 @@ const panels = new Panels(app, layout);
 const presentation = new Presentation(layout, camera);
 let cardOpenedAt = null; // Position, an der die Infokarte im freien Laufen geöffnet wurde
 
-presentation.onStation = (station, i) => {
-  panels.showCard(station, presentation.total);
-  panels.setIndicator(`${i + 1}/${presentation.total}`);
+const stationCount = layout.stationen.length;
+const SLIDE_LABEL = { einleitung: 'Einleitung', schluss: 'Fazit', quellen: 'Quellen' };
+presentation.onStation = (slide) => {
+  if (slide.typ === 'station') {
+    panels.hideSlide();
+    panels.showCard(slide, stationCount);
+    panels.setIndicator(`${slide.nr}/${stationCount}`);
+  } else {
+    panels.hideCard();
+    panels.showSlide(slide, stationCount);
+    panels.setIndicator(SLIDE_LABEL[slide.typ]);
+  }
 };
 
 function startPresentation(i) {
@@ -182,6 +191,7 @@ function stopPresentation() {
   document.body.classList.remove('presenting');
   touch.setActive('praesentation', false);
   panels.hideCard();
+  panels.hideSlide();
   panels.setIndicator(null);
   // Laufen dort fortsetzen, wo die Kamera steht (außerhalb des Ladens → Startpunkt)
   const x = camera.position.x;
@@ -222,12 +232,18 @@ hud.hint.addEventListener('pointerdown', (e) => e.stopPropagation());
 bus.on('info', () => {
   if (exportDialog.visible) return exportDialog.hide();
   if (view === 'ego' && !presentation.active && interactions.interact()) return;
-  if (panels.cardVisible) {
-    panels.hideCard();
+  if (presentation.active) {
+    // Karte/Folie aus- und wieder einblenden (freier Blick auf den Laden)
+    const cur = presentation.current;
+    if (cur.typ === 'station') {
+      if (panels.cardVisible) panels.hideCard();
+      else panels.showCard(cur, stationCount);
+    } else if (panels.slideVisible) panels.hideSlide();
+    else panels.showSlide(cur, stationCount);
     return;
   }
-  if (presentation.active) {
-    panels.showCard(presentation.stations[presentation.index], presentation.total);
+  if (panels.cardVisible) {
+    panels.hideCard();
     return;
   }
   if (view === 'top') {
@@ -236,7 +252,7 @@ bus.on('info', () => {
   }
   const s = presentation.stationInView(camera);
   if (s) {
-    panels.showCard(s, presentation.total);
+    panels.showCard(s, stationCount);
     cardOpenedAt = [player.x, player.z];
   } else {
     hud.toast('Kein Objekt mit Infokarte im Blick – näher herangehen oder direkt anschauen', 2400);

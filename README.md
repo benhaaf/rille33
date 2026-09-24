@@ -28,11 +28,12 @@ Uni-Projekt (BWL Handel, Store Layout, DHBW Heilbronn): begehbarer 3D-Prototyp e
 Der Controller verbindet sich per USB oder Bluetooth; nach dem ersten Tastendruck steht oben links „Controller verbunden“. Sobald der Controller benutzt wird, blenden sich die Touch-Buttons aus (Antippen holt sie zurück).
 
 ## Präsentation (20 Minuten)
-1. „Präs.“ / Options starten → Kamera fliegt zu Station 1 (Schaufenster, von der Straße aus).
+1. „Präs.“ / Options starten → Einleitung (Titel, Leitfrage, Ablauf) vor dem Laden. Mit R1 / „Weiter“ geht es zu Station 1.
 2. R1 / „Weiter“ blättert wie Folien durch die 8 Stationen, die Infokarte (Entscheidung · Begründung · Quelle · Annahme) blendet automatisch ein, unten rechts steht „3/8“.
 3. Zwischendurch frei laufen: Options beendet den Präsentationsmodus an der aktuellen Stelle; X / „Info“ zeigt die Karte zu dem, was man gerade ansieht.
 4. „Rahmen“ / Create zeigt Standort, Kundengruppen, Sortiment, Fläche und Zielumsatz.
 5. Dreieck / „Ansicht“ wechselt in die Draufsicht mit Legende und Maßstab.
+6. Nach Station 8 folgen „Fazit“ und „Quellen“. Texte: `layout.json` → `praesentation`.
 
 ## Auf dem iPad installieren (offline)
 1. Seite in Safari öffnen und warten, bis „Offline bereit“ erscheint.
