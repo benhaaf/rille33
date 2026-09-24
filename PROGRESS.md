@@ -109,6 +109,12 @@
 - **Pflanze** steht frei vor der Lattenwand (ragte vorher in die Wand).
 - Hauptweg weiterhin komplett begehbar (getestet).
 
+## Präsentationsformat und mehr Detail
+- **Präsentationsablauf:** Einleitung (Titel, Leitfrage, Ablauf, Team) → Stationen 1–8 → Fazit (Kernaussagen, Ausblick) → Quellen (vollständige Literaturangaben). Texte und Kamerapositionen in `layout.json` → `praesentation`. Anzeige unten rechts: „Einleitung“, „3/8“, „Fazit“, „Quellen“. Info (X/E) blendet Karte oder Folie aus/ein.
+- **Weniger kantig:** Möbelteile mit abgerundeten Kanten (`kantenRadius` in `config.js`, 0 = aus), auch Kartons, Taschen, Latten; runde Teile mit mehr Segmenten; Sockelleisten an allen Wänden; Leuchtschrift „RILLE 33“ an der Fassade.
+- Stand: ca. 180 Draw Calls, ca. 145.000 Dreiecke.
+- **Zu prüfen:** Literaturangabe Ahlert/Kenning/Brock (Titel, Auflage, Jahr) mit dem eigenen Exemplar abgleichen.
+
 ## Offen / Ideen
 - Test mit echtem PS5-Controller am iPad (Options/Create könnten von iPadOS abgefangen werden – dann Tasten umlegen).
 - Kamerapositionen der Stationen nach Probelauf feinjustieren (`layout.json` → `stationen[].kamera`).

@@ -23,6 +23,8 @@ export default {
     maxPixelRatio: 1.5,
     antialias: true,
     fov: 70,
+    // Abgerundete Möbelkanten in Metern (0 = eckig, spart Rechenleistung)
+    kantenRadius: 0.012,
     // Fällt die Bildrate länger unter diesen Wert, wird die Auflösung automatisch etwas gesenkt
     dynamischeAufloesung: true,
     zielFps: 50,

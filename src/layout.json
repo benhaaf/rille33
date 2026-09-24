@@ -424,8 +424,42 @@
         "titel": "GETRÄNKE",
         "zeilen": ["Espresso ........ 2, 50", "Cappuccino ...... 3, 50", "Rille Mate ...... 3, 20", "Hausbier 0, 3 .... 3, 90", "Riesling 0, 1 .... 4, 50", "Neckar Gin Tonic  7, 50"]
       },
-      { "typ": "neon", "text": "Listening Bar", "pos": [8.15, 14.93], "richtung": [0, -1], "y": 2.47, "hoehe": 0.5, "farbe": "#ff8a3d", "schrift": "italic 700" }
+      { "typ": "neon", "text": "Listening Bar", "pos": [8.15, 14.93], "richtung": [0, -1], "y": 2.47, "hoehe": 0.5, "farbe": "#ff8a3d", "schrift": "italic 700" },
+      {
+        "typ": "neon",
+        "text": "RILLE 33",
+        "pos": [5.75, -0.21],
+        "richtung": [0, -1],
+        "y": 3,
+        "hoehe": 0.36,
+        "farbe": "#ff8a3d",
+        "_ort": "Fassade über dem Schaufenster"
+      }
     ]
+  },
+  "praesentation": {
+    "_hinweis": "Ablauf im Präsentationsmodus: Einleitung → Stationen 1–8 → Fazit → Quellen. Alle Texte hier änderbar.",
+    "einleitung": {
+      "titel": "Rille 33",
+      "untertitel": "Plattenladen & Listening Bar – ein Store-Layout-Konzept",
+      "zeile": "BWL Handel · Store Layout · DHBW Heilbronn",
+      "team": "Team: [Namen eintragen]",
+      "fragestellung": "Wie muss ein Plattenladen gestaltet sein, damit Sammler, Einsteiger und Geschenkkäufer finden, was sie suchen – und länger bleiben?",
+      "agenda": ["Rahmen: Standort, Zielgruppen, Sortiment", "Rundgang entlang des Hauptwegs – 8 Stationen", "Fazit", "Quellen"],
+      "kamera": { "position": [2.2, -6.2], "hoehe": 1.9, "ziel": [7.6, 1.5, 4] }
+    },
+    "schluss": {
+      "titel": "Fazit",
+      "punkte": ["Hauptweg führt als Rundlauf durch alle Zonen – Listening Bar an der Rückwand als Magnet", "Genre-Wand längs am Weg: schnelle Orientierung für zielgerichtete Käufer", "Neuheiten quer zum Weg und Zubehör an der Kasse: Anlässe für Impulskäufe", "Second-Hand und Beratung abseits des Stroms: Ruhe für lange Verweildauer", "Warme/neutrale Lichtzonen, Holz & Filz: Atmosphäre als Teil des Konzepts"],
+      "ausblick": "Offene Annahmen (z. B. Flächenproduktivität, Genre-Umsätze) sollten mit echten Daten überprüft werden.",
+      "kamera": { "position": [0.7, 0.7], "hoehe": 2.45, "ziel": [7.5, 0.5, 9.5] }
+    },
+    "quellen": {
+      "titel": "Quellen",
+      "liste": ["Ahlert, D.; Kenning, P.; Brock, C. (2020): Handelsmarketing. Grundlagen der marktorientierten Führung von Handelsbetrieben. Springer Gabler. [Titel/Auflage bitte prüfen]", "Larson, J. S.; Bradlow, E. T.; Fader, P. S. (2005): An exploratory look at supermarket shopping paths. International Journal of Research in Marketing, 22(4), S. 395–414."],
+      "hinweise": ["Alle Marken- und Bandnamen sind fiktiv.", "3D-Prototyp: eigene Darstellung (Three.js), Musik synthetisch erzeugt."],
+      "kamera": { "position": [0.7, 0.7], "hoehe": 2.45, "ziel": [7.5, 0.5, 9.5] }
+    }
   },
   "start": {
     "position": [2.5, 0.6],

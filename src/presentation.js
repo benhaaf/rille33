@@ -17,6 +17,14 @@ export class Presentation {
   constructor(layout, camera) {
     this.layout = layout;
     this.stations = layout.stationen;
+    // Folienfolge: Einleitung → Stationen → Fazit → Quellen (Einleitung/Fazit/Quellen optional)
+    const P = layout.praesentation || {};
+    this.slides = [
+      ...(P.einleitung ? [{ ...P.einleitung, typ: 'einleitung' }] : []),
+      ...this.stations.map((st) => ({ ...st, typ: 'station' })),
+      ...(P.schluss ? [{ ...P.schluss, typ: 'schluss' }] : []),
+      ...(P.quellen ? [{ ...P.quellen, typ: 'quellen' }] : []),
+    ];
     this.camera = camera;
     this.active = false;
     this.index = -1;
@@ -25,7 +33,11 @@ export class Presentation {
   }
 
   get total() {
-    return this.stations.length;
+    return this.slides.length;
+  }
+
+  get current() {
+    return this.slides[this.index];
   }
 
   start(i = 0) {
@@ -47,14 +59,15 @@ export class Presentation {
   }
 
   go(i) {
-    const station = this.stations[i];
-    const to = stationPose(station);
+    const slide = this.slides[i];
+    const to = stationPose(slide);
     const from = { pos: this.camera.position.clone(), quat: this.camera.quaternion.clone() };
     const dist = from.pos.distanceTo(to.pos);
+    const same = dist < 0.01 && from.quat.angleTo(to.quat) < 0.01;
     const dur = Math.min(3.2, Math.max(1.2, 0.9 + dist * 0.2));
-    this.flight = { from, to, t: 0, dur, arc: Math.min(0.6, dist * 0.08) };
+    this.flight = same ? null : { from, to, t: 0, dur, arc: Math.min(0.6, dist * 0.08) };
     this.index = i;
-    this.onStation(station, i);
+    this.onStation(slide, i);
   }
 
   update(dt) {

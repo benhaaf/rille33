@@ -1,6 +1,7 @@
 // Zubehör an der Gondel (M12) und Kartons im Lager: erkennbare Formen mit eigenen, gezeichneten Texturen.
 import * as THREE from 'three';
 import { yawFacing } from './builder.js';
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 
 export function canvasTex(w, h, draw) {
   const c = document.createElement('canvas');
@@ -227,9 +228,9 @@ export class AccessoryKit {
     };
     this.cartons = new Map();
     this.geo = {
-      box: new THREE.BoxGeometry(1, 1, 1),
-      sprayBody: new THREE.CylinderGeometry(0.028, 0.03, 0.17, 14),
-      sprayHead: new THREE.CylinderGeometry(0.014, 0.018, 0.035, 10),
+      box: new RoundedBoxGeometry(1, 1, 1, 1, 0.04), // wird skaliert → weiche Kanten
+      sprayBody: new THREE.CylinderGeometry(0.028, 0.03, 0.17, 28),
+      sprayHead: new THREE.CylinderGeometry(0.014, 0.018, 0.035, 20),
       slipmat: new THREE.CylinderGeometry(0.15, 0.15, 0.004, 32),
       toteHandle: new THREE.TorusGeometry(0.07, 0.008, 6, 16, Math.PI),
     };
