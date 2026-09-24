@@ -103,6 +103,12 @@
 - **Details:** Aufsteller an den Hörstationen, Schilder „Neuheiten“/„Charts“, Trennkarten und Schilder „Second-Hand A–M / N–Z“, Kassenbildschirm mit Oberfläche, hängendes Schild „KASSE“, Gutschein-Aufsteller, Preisschilder an der Hardware-Wand, Beratungs-Aufsteller, Prospekte und Hocker am Beratungstisch.
 - Stand: ca. 180 Draw Calls, 58.000 Dreiecke.
 
+## Umbau – Bar mit Arbeitsgang, neue Kasse, Pflanze
+- **Bar (Abweichung von SPEC Kap. 6):** Theke von z 14,1–14,7 auf z 13,3–13,9 nach vorn gerückt, Hocker auf z 12,95, Hörstationen von z 12,2 auf 11,95. Dahinter ca. 75 cm Arbeitsgang mit Bodenmatte, erreichbar am rechten Thekenende. Mitarbeiterseite: Spüle mit Hahn, Gläserspüler, Kühlschubladen, Gläserfach; Zapfhähne zeigen zum Personal. Rückbuffet (Tiefe 36 cm) mit Schranktüren, Espressomaschine, DJ-Ecke; Glastür-Kühlschrank ins Rückbuffet integriert. Werte in `layout.json` (`M8.rechteck`, `hocker_z`, `rueckbuffet`).
+- **Kasse:** Lattenfront mit LED und Logo-Schild, Kassenlade; Kassensystem mit Personal-Bildschirm, Kundendisplay „Summe“, Kartenterminal, Bondrucker; Tragetaschen, Sticker-/Button-Korb, Gutschein-Aufsteller; Bodenaufkleber „Bitte hier anstellen“; Regal „Abholung – Vorbestellungen“ an der Frontwand hinter der Kasse.
+- **Pflanze** steht frei vor der Lattenwand (ragte vorher in die Wand).
+- Hauptweg weiterhin komplett begehbar (getestet).
+
 ## Offen / Ideen
 - Test mit echtem PS5-Controller am iPad (Options/Create könnten von iPadOS abgefangen werden – dann Tasten umlegen).
 - Kamerapositionen der Stationen nach Probelauf feinjustieren (`layout.json` → `stationen[].kamera`).

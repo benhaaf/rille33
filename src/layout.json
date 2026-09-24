@@ -121,8 +121,26 @@
     },
     { "id": "M5", "name": "Digging-Kiste Reihe 1", "typ": "digging-kiste", "rechteck": [4.8, 5.6, 6.5, 10.5], "hoehe": 0.9 },
     { "id": "M6", "name": "Digging-Kiste Reihe 2", "typ": "digging-kiste", "rechteck": [6.8, 7.6, 6.5, 10.5], "hoehe": 0.9 },
-    { "id": "M7", "name": "Hörstationen", "typ": "hoerstation", "stationen": [[5.8, 12.2], [7.3, 12.2], [8.8, 12.2]], "durchmesser": 0.7, "hoehe": 1.1 },
-    { "id": "M8", "name": "Bar-Theke", "typ": "bar", "rechteck": [6, 10.2, 14.1, 14.7], "hoehe": 1.1, "hocker_z": 13.6, "hocker_x": [6.6, 7.6, 8.6, 9.6] },
+    {
+      "id": "M7",
+      "name": "Hörstationen",
+      "typ": "hoerstation",
+      "stationen": [[5.8, 11.95], [7.3, 11.95], [8.8, 11.95]],
+      "durchmesser": 0.7,
+      "hoehe": 1.1,
+      "_abweichung": "SPEC: z 12, 2 – nach vorn gerückt, damit Platz für Barhocker bleibt"
+    },
+    {
+      "id": "M8",
+      "name": "Bar-Theke",
+      "typ": "bar",
+      "rechteck": [6, 10.2, 13.3, 13.9],
+      "hoehe": 1.1,
+      "hocker_z": 12.95,
+      "hocker_x": [6.6, 7.6, 8.6, 9.6],
+      "rueckbuffet": { "tiefe": 0.36, "hoehe": 0.95 },
+      "_abweichung": "SPEC: Theke z 14, 1–14, 7 – nach vorn gerückt, damit dahinter ein Arbeitsgang (ca. 75 cm) für das Personal bleibt"
+    },
     {
       "id": "M9",
       "name": "Hardware-Wand",
@@ -271,7 +289,7 @@
       "titel": "Listening Bar",
       "bezug": "Z5",
       "objekte": ["Z5", "M7", "M8"],
-      "kamera": { "position": [7.3, 9.9], "hoehe": 1.8, "ziel": [8, 1.2, 13.8] },
+      "kamera": { "position": [7.3, 9.7], "hoehe": 1.8, "ziel": [8, 1.1, 14.2] },
       "entscheidung": "Bar und Hörstationen an der Rückwand.",
       "begruendung": "Attraktiver Zielpunkt zieht Kunden durch den gesamten Laden; Atmosphäre über Klang, Licht, Material.",
       "quelle": "Ahlert et al. 2020, S. 303–306",
@@ -375,7 +393,7 @@
         "farbe": "#5b6d5b",
         "akzent": "#f4f1ec"
       },
-      { "typ": "pflanze", "pos": [0.95, 11.7] },
+      { "typ": "pflanze", "pos": [1.1, 11.4] },
       {
         "typ": "tafel",
         "pos": [4.56, 12.52],

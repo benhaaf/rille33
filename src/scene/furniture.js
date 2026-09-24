@@ -477,14 +477,12 @@ export function buildFurniture(layout) {
       continue;
     }
     if (m.typ === 'bar') decor.bar(b, m, ctx);
+    else if (m.typ === 'kasse') decor.kasse(b, m, ctx);
     else fn(b, m, ctx);
     decor.details(b, m, ctx);
     colliders.push(...footprints(m));
   }
   colliders.push(...decor.wall(ctx, layout));
-  // Rückbuffet der Bar steht an der Wand
-  const bar = layout.moebel.find((m) => m.typ === 'bar');
-  if (bar) colliders.push([bar.rechteck[0], bar.rechteck[1], 14.6, 15]);
   const group = b.build('Möbel');
   group.add(ctx.covers.build());
   group.add(ctx.drawers.build());
