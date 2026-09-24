@@ -315,6 +315,100 @@
     ],
     "fusszeile": "Uni-Projekt BWL Handel · Store Layout · DHBW Heilbronn"
   },
+  "wanddeko": {
+    "_hinweis": "Deko an den Wänden. pos = [x, z] auf der Wandfläche, richtung = wohin die Vorderseite zeigt, y = Mittelhöhe in m.",
+    "elemente": [
+      { "typ": "lattenwand", "von": [0.65, 11.95], "bis": [4.45, 11.95], "richtung": [0, -1], "oben": 1.05 },
+      { "typ": "neon", "text": "RILLE 33", "pos": [2.55, 11.94], "richtung": [0, -1], "y": 2.62, "hoehe": 0.42, "farbe": "#ff8a3d" },
+      {
+        "typ": "poster",
+        "pos": [1.05, 11.94],
+        "richtung": [0, -1],
+        "y": 1.72,
+        "titel": "NACHTBUS",
+        "zeile": "live im Laden",
+        "datum": "Fr 14.11. · 20 Uhr",
+        "farbe": "#3d405b",
+        "akzent": "#f2c230"
+      },
+      {
+        "typ": "poster",
+        "pos": [1.8, 11.94],
+        "richtung": [0, -1],
+        "y": 1.72,
+        "titel": "JAZZ AM SONNTAG",
+        "zeile": "Listening Session",
+        "datum": "jeden So · 16 Uhr",
+        "farbe": "#1f7a7a",
+        "akzent": "#f4f1ec"
+      },
+      {
+        "typ": "poster",
+        "pos": [2.55, 11.94],
+        "richtung": [0, -1],
+        "y": 1.72,
+        "titel": "PLATTENBÖRSE",
+        "zeile": "Ankauf · Tausch · Digging",
+        "datum": "Sa 29.11. · 11–18 Uhr",
+        "farbe": "#e8772e",
+        "akzent": "#1c1c1f"
+      },
+      {
+        "typ": "poster",
+        "pos": [3.3, 11.94],
+        "richtung": [0, -1],
+        "y": 1.72,
+        "titel": "RECORD STORE DAY",
+        "zeile": "Limitierte Pressungen",
+        "datum": "April · ab 9 Uhr",
+        "farbe": "#7a2e2a",
+        "akzent": "#f2c230"
+      },
+      {
+        "typ": "poster",
+        "pos": [4.05, 11.94],
+        "richtung": [0, -1],
+        "y": 1.72,
+        "titel": "PLATTENPFLEGE",
+        "zeile": "Workshop für Einsteiger",
+        "datum": "Mi 3.12. · 18 Uhr",
+        "farbe": "#5b6d5b",
+        "akzent": "#f4f1ec"
+      },
+      { "typ": "pflanze", "pos": [0.95, 11.7] },
+      {
+        "typ": "tafel",
+        "pos": [4.56, 12.52],
+        "richtung": [1, 0],
+        "y": 1.45,
+        "breite": 0.72,
+        "hoehe": 0.95,
+        "titel": "HÖRREGELN",
+        "zeilen": ["1. Jede Platte darf probegehört werden", "2. Nur am Rand anfassen", "3. Tonarm mit dem Lift absetzen", "4. Kopfhörer zurückhängen", "5. Fragen? Einfach fragen!"]
+      },
+      {
+        "typ": "tafel",
+        "pos": [4.56, 14.5],
+        "richtung": [1, 0],
+        "y": 1.45,
+        "breite": 0.72,
+        "hoehe": 0.95,
+        "titel": "DIESE WOCHE",
+        "zeilen": ["Mo  ruhig – nur Musik", "Mi  Workshop Plattenpflege", "Fr  Nachtbus live · 20 Uhr", "Sa  Plattenbörse", "So  Jazz-Session · 16 Uhr"]
+      },
+      {
+        "typ": "tafel",
+        "pos": [5.3, 14.95],
+        "richtung": [0, -1],
+        "y": 1.42,
+        "breite": 0.95,
+        "hoehe": 0.85,
+        "titel": "GETRÄNKE",
+        "zeilen": ["Espresso ........ 2, 50", "Cappuccino ...... 3, 50", "Rille Mate ...... 3, 20", "Hausbier 0, 3 .... 3, 90", "Riesling 0, 1 .... 4, 50", "Neckar Gin Tonic  7, 50"]
+      },
+      { "typ": "neon", "text": "Listening Bar", "pos": [8.15, 14.93], "richtung": [0, -1], "y": 2.47, "hoehe": 0.5, "farbe": "#ff8a3d", "schrift": "italic 700" }
+    ]
+  },
   "start": {
     "position": [2.5, 0.6],
     "blickrichtung_grad": 0,
