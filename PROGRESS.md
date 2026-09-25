@@ -122,6 +122,13 @@
 - Stand: ca. 240.000 Dreiecke, ca. 270 Draw Calls im Gesamtblick.
 - **Zu klären:** Rahmen-Overlay nennt weiterhin „Innenstadt-Nebenlage Heilbronn“ als Standort.
 
+## Realistischere Figuren
+- Neuer Körperaufbau in `src/scene/people.js`: Proportionen ca. 7,5 Kopflängen, geformter Oberkörper und Becken, Ober-/Unterschenkel mit Knie, Ober-/Unterarm mit Ellbogen, Hände, Hals, Schuhe mit Sohle.
+- Gesicht mit Augen, Brauen, Nase, Mund, Ohren; Frisuren (kurz, lang, Bob, Dutt, Glatze), Bärte, Brillen; Kleidung mit Kragen, kurzen/langen Ärmeln, offenen Jacken, Röcken, Umhängetaschen; Personal mit Schürze.
+- Haltungen: stehen, stöbern (greift ins Regal, Kopf gesenkt), arbeiten.
+- Simulationsfigur mit Gehzyklus: Knie- und Ellbogenbeugung, Wippen, weicher Übergang Stehen ↔ Gehen.
+- Stand: ca. 315.000 Dreiecke.
+
 ## Offen / Ideen
 - Test mit echtem PS5-Controller am iPad (Options/Create könnten von iPadOS abgefangen werden – dann Tasten umlegen).
 - Kamerapositionen der Stationen nach Probelauf feinjustieren (`layout.json` → `stationen[].kamera`).
