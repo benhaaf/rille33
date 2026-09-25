@@ -192,14 +192,7 @@ export function buildRoom(layout) {
   const outside = new THREE.Group();
   outside.name = 'Aussen';
   group.add(outside);
-  outside.add(box(mat.gehweg, [-6, W + 6, -4, -t], 0.02, -0.02));
-  outside.add(box(mat.strasse, [-30, W + 30, -14, -4], 0.02, -0.12));
-  // Gegenüberliegende Häuserzeile als einfache Blöcke
-  const haus = new THREE.MeshStandardMaterial({ color: 0x55565c, roughness: 1 });
-  for (let i = -3; i < 6; i++) {
-    const hgt = 7 + ((i * 37) % 5);
-    outside.add(box(haus, [i * 5 - 1, i * 5 + 3.6, -22, -16], hgt));
-  }
+  // Die Passage davor wird in main.js ergänzt (scene/passage.js)
 
   return { group, colliders, ceiling, outside, doors };
 }

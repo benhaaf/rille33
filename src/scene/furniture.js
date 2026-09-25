@@ -6,6 +6,7 @@ import { signMesh } from './labels.js';
 import { Drawers } from './drawers.js';
 import { AccessoryKit, priceLabel } from './accessories.js';
 import { Decor } from './decor.js';
+import { addStaticPerson, randomLook } from './people.js';
 
 const std = (color, roughness = 0.8, metalness = 0) => new THREE.MeshStandardMaterial({ color, roughness, metalness });
 
@@ -38,21 +39,47 @@ const E = 0.005;
 // Plattenspieler, Front zeigt in Richtung (dx, dz)
 function turntable(b, x, y, z, [dx, dz], plinth = 'holz') {
   const yaw = yawFacing(dx, dz);
-  b.geo(plinth, G.box(0.44, 0.09, 0.34), x, y + 0.045, z, yaw);
-  b.geo('schwarz', G.disc(0.15, 0.02), x - dz * 0.04, y + 0.1, z + dx * 0.04);
-  b.geo('akzent', G.disc(0.045, 0.024), x - dz * 0.04, y + 0.101, z + dx * 0.04);
-  // Tonarm
-  b.geo('chrom', G.box(0.012, 0.012, 0.2), x + dz * 0.15 - dx * 0.02, y + 0.12, z - dx * 0.15 - dz * 0.02, yaw + 0.35);
+  // Richtungen: f = zum Kunden, r = rechts davon (Store-Koordinaten)
+  const rx = -dz;
+  const rz = dx;
+  const at = (fr, rr) => [x + dx * fr + rx * rr, z + dz * fr + rz * rr];
+  b.geo(plinth, G.box(0.44, 0.08, 0.34), x, y + 0.05, z, yaw);
+  for (const [fr, rr] of [[0.13, 0.18], [0.13, -0.18], [-0.13, 0.18], [-0.13, -0.18]]) {
+    const [fx, fz] = at(fr, rr);
+    b.geo('schwarz', G.disc(0.022, 0.012, 16), fx, y + 0.006, fz); // Gerätefüße
+  }
+  const [px, pz] = at(0, -0.04);
+  b.geo('chrom', G.disc(0.152, 0.012), px, y + 0.095, pz); // Plattenteller
+  b.geo('schwarz', G.disc(0.148, 0.006), px, y + 0.104, pz); // Platte
+  b.geo('akzent', G.disc(0.045, 0.008), px, y + 0.106, pz); // Label
+  b.geo('chrom', G.disc(0.004, 0.02, 8), px, y + 0.112, pz); // Mittelachse
+  // Tonarm: Lager, Arm, Gegengewicht, Tonkopf
+  const [ax, az] = at(-0.1, 0.16);
+  b.geo('chrom', G.disc(0.022, 0.03, 16), ax, y + 0.105, az);
+  b.geo('chrom', G.box(0.01, 0.01, 0.21), ax + (dx * 0.1 - rx * 0.03), y + 0.125, az + (dz * 0.1 - rz * 0.03), yaw + 0.3);
+  const [cx, cz] = at(-0.15, 0.17);
+  b.geo('schwarz', G.disc(0.018, 0.03, 12), cx, y + 0.125, cz, yaw, Math.PI / 2);
+  const [hx, hz] = at(0.1, 0.1);
+  b.geo('schwarz', G.box(0.02, 0.012, 0.035), hx, y + 0.12, hz, yaw + 0.3);
+  // Drehzahlknopf und Start-Taste vorn
+  const [kx, kz] = at(0.15, -0.16);
+  b.geo('chrom', G.disc(0.012, 0.012, 12), kx, y + 0.095, kz);
+  const [sx, sz] = at(0.15, -0.11);
+  b.geo('akzent', G.box(0.025, 0.006, 0.015), sx, y + 0.092, sz, yaw);
 }
 
 function speaker(b, x, y, z, [dx, dz], h = 0.34) {
   const yaw = yawFacing(dx, dz);
   b.geo('korpus', G.box(0.22, h, 0.24), x, y + h / 2, z, yaw);
-  // Membranen auf der Front
+  // Membranen mit Sicke und Bassreflexöffnung auf der Front
   const fx = x + dx * 0.121;
   const fz = z + dz * 0.121;
-  b.geo('schwarz', G.disc(0.075, 0.01), fx, y + h * 0.35, fz, yaw, Math.PI / 2);
-  b.geo('schwarz', G.disc(0.035, 0.01), fx, y + h * 0.75, fz, yaw, Math.PI / 2);
+  b.geo('metall', G.disc(0.08, 0.008), fx, y + h * 0.35, fz, yaw, Math.PI / 2);
+  b.geo('schwarz', G.disc(0.066, 0.012), fx, y + h * 0.35, fz, yaw, Math.PI / 2);
+  b.geo('metall', G.disc(0.02, 0.016), fx, y + h * 0.35, fz, yaw, Math.PI / 2);
+  b.geo('metall', G.disc(0.038, 0.008), fx, y + h * 0.75, fz, yaw, Math.PI / 2);
+  b.geo('schwarz', G.disc(0.026, 0.012), fx, y + h * 0.75, fz, yaw, Math.PI / 2);
+  b.geo('schwarz', G.disc(0.018, 0.014), fx, y + h * 0.1 + 0.015, fz, yaw, Math.PI / 2);
 }
 
 function tableLegs(b, [x1, x2, z1, z2], h, inset = 0.06, t = 0.05) {
@@ -483,8 +510,50 @@ export function buildFurniture(layout) {
     colliders.push(...footprints(m));
   }
   colliders.push(...decor.wall(ctx, layout));
+
+  // Menschen im Laden (belebt die Szene): Personal und stöbernde Kundschaft
+  const people = [
+    // [x, z, Blickrichtung, Haltung, Personal?]
+    [8.1, 14.25, [0, -1], 'arbeiten', true], // Barkraft im Arbeitsgang
+    [10.3, 1.45, [0, 1], 'arbeiten', true], // Kasse
+    [1.15, 7.3, [-1, 0], 'stoebern'], // Genre-Wand
+    [1.2, 4.1, [-1, 0], 'stoebern'],
+    [4.45, 8.0, [1, 0], 'stoebern'], // Second-Hand (außen an den Kisten, Gang bleibt frei)
+    [7.95, 9.3, [-1, 0], 'stoebern'],
+    [5.25, 11.95, [1, 0], 'stoebern'], // Hörstation (seitlich, Hauptweg bleibt frei)
+    [9.15, 12.75, [0, 1], 'stehen'], // Bargast
+    [10.6, 9.0, [1, 0], 'stehen'], // Hardware
+    [4.6, 4.5, [0, -1], 'stoebern'], // Neuheiten
+  ];
+  const staffLook = { top: '#1c1c1f', bag: false };
+  for (const [x, z, dir, pose, staff] of people) {
+    addStaticPerson(b, randomLook(rand, staff ? staffLook : {}), x, z, yawFacing(...dir), pose);
+    if (!staff) colliders.push([x - 0.22, x + 0.22, z - 0.22, z + 0.22]); // Personal blockiert Arbeitsgang/Kasse nicht
+  }
+
+  // Lüftungsrohr unter der Decke mit Abhängungen (eigene Gruppe → in der Draufsicht ausgeblendet)
+  const duct = new Builder(MATERIALS);
+  for (const [a, e, zz] of [[1.6, 10.6, 7.6]]) {
+    const b = duct;
+    b.geo('chrom', new THREE.CylinderGeometry(0.16, 0.16, e - a, 24), (a + e) / 2, 2.92, zz, 0, 0, Math.PI / 2);
+    for (let x = a + 0.5; x < e; x += 1.5) {
+      b.geo('metall', new THREE.TorusGeometry(0.165, 0.012, 6, 24), x, 2.92, zz, Math.PI / 2);
+      b.box('metall', [x - 0.006, x + 0.006, zz - 0.006, zz + 0.006], 3.08, 3.2);
+    }
+    for (let x = a + 1.2; x < e; x += 3) b.box('metall', [x - 0.12, x + 0.12, zz - 0.08, zz + 0.08], 2.72, 2.77); // Luftauslass
+  }
+  const ductGroup = duct.build('Lueftung');
+  // Feuerlöscher mit Schild neben dem Notausgang
+  const fx = 11.84;
+  const fz = 11.5;
+  if (!b.materials.rot) b.materials.rot = std(0xc0282b, 0.4);
+  b.geo('rot', new THREE.CylinderGeometry(0.075, 0.075, 0.5, 20), fx, 0.55, fz);
+  b.geo('schwarz', new THREE.CylinderGeometry(0.03, 0.04, 0.08, 12), fx, 0.84, fz);
+  b.box('metall', [11.95, 12, fz - 0.05, fz + 0.05], 0.5, 0.9);
+  sign(ctx.extra, 'FEUERLÖSCHER', { w: 0.28, h: 0.1, bg: '#c0282b', fg: '#ffffff' }, 11.99, 1.1, fz, [-1, 0]);
   const group = b.build('Möbel');
   group.add(ctx.covers.build());
   group.add(ctx.drawers.build());
+  group.add(ductGroup);
   return { group, colliders, drawers: ctx.drawers };
 }

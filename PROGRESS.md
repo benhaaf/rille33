@@ -115,6 +115,13 @@
 - Stand: ca. 180 Draw Calls, ca. 145.000 Dreiecke.
 - **Zu prüfen:** Literaturangabe Ahlert/Kenning/Brock (Titel, Auflage, Jahr) mit dem eigenen Exemplar abgleichen.
 
+## Karlspassage, mehr Leben, Kundensimulation
+- **Umgebung** (`src/scene/passage.js`): überdachte Ladenpassage im Stil der Karlspassage Stuttgart (freie Nachempfindung, kein exakter Nachbau): Glasdach mit Stahlbindern, Granitboden, Fassaden mit Obergeschossen, fiktive Nachbarläden mit Schaufenstern, Ausleger-Schildern, Banner „Karlspassage“, Leuchten, Bänke, Bäume in Pflanzkübeln, Litfaßsäule, Mülleimer, Passanten; vor Rille 33 ein Kundenstopper und eine Grabbelkiste.
+- **Mehr Detail/Leben:** Personal an Bar und Kasse, stöbernde Kundschaft (`src/scene/people.js`), Plattenspieler mit Füßen, Teller, Tonarm, Gegengewicht, Knöpfen; Lautsprecher mit Sicken und Bassreflex; Lüftungsrohr an der Decke; Feuerlöscher.
+- **Kundensimulation** (`src/simulation.js`, Daten in `layout.json` → `simulation`): „Sim.“ / K / Steuerkreuz oben. Eine Kundin läuft aus der Passage den Hauptweg ab, bleibt an 9 Halten stehen, Bildunterschrift erklärt das Verhalten; Kamera folgt, in der Draufsicht sieht man sie von oben (oranger Ring). Weiter/Zurück springen zum nächsten/vorigen Halt. Erneut starten → Sammler auf dem Sammler-Weg.
+- Stand: ca. 240.000 Dreiecke, ca. 270 Draw Calls im Gesamtblick.
+- **Zu klären:** Rahmen-Overlay nennt weiterhin „Innenstadt-Nebenlage Heilbronn“ als Standort.
+
 ## Offen / Ideen
 - Test mit echtem PS5-Controller am iPad (Options/Create könnten von iPadOS abgefangen werden – dann Tasten umlegen).
 - Kamerapositionen der Stationen nach Probelauf feinjustieren (`layout.json` → `stationen[].kamera`).

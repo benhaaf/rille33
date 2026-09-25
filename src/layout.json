@@ -461,6 +461,59 @@
       "kamera": { "position": [0.7, 0.7], "hoehe": 2.45, "ziel": [7.5, 0.5, 9.5] }
     }
   },
+  "simulation": {
+    "_hinweis": "Simulierte Kunden. Punkte [x, z]; mit „text“ bleibt der Kunde stehen (dauer in s) und schaut zum Punkt „blick“ [x, z]. Erneutes Starten wechselt zur nächsten Kundengruppe.",
+    "tempo": 1.1,
+    "kunden": [
+      {
+        "name": "Einsteigerin",
+        "beschreibung": "folgt dem Hauptweg",
+        "farbe": "#b56576",
+        "punkte": [
+          { "p": [2.5, -3.5] },
+          { "p": [2.5, 0.4], "text": "Betritt den Laden – kurze Orientierung in der freien Eingangszone", "dauer": 2.2, "blick": [7, 12] },
+          { "p": [2.3, 3.3], "text": "Neuheiten-Tische quer zum Weg bremsen – Blick auf die Charts", "dauer": 2.5, "blick": [4.5, 3.5] },
+          { "p": [2.2, 4.8], "text": "Genre-Wand: Rock/Indie und Hip-Hop – Längsplatzierung am Weg", "dauer": 3, "blick": [0.3, 4.8] },
+          { "p": [2.2, 8.6], "text": "Stöbert bei Jazz/Soul – Top-Titel in der Sichtzone", "dauer": 2.5, "blick": [0.3, 8.6] },
+          { "p": [2.2, 10.8] },
+          { "p": [4, 11.3] },
+          { "p": [7.3, 11.3], "text": "Die Listening Bar zieht nach hinten – Platte an der Hörstation probehören", "dauer": 3.5, "blick": [7.3, 11.95] },
+          { "p": [9.2, 11.3] },
+          { "p": [9.2, 7.3], "text": "Hardware & Beratung: Plattenspieler im Markenvergleich", "dauer": 2.8, "blick": [11.4, 7.3] },
+          { "p": [9.2, 4.5] },
+          { "p": [8.7, 3.7], "text": "Wartet an der Kasse – greift zum Zubehör an der Gondel (Impulskauf)", "dauer": 2.8, "blick": [7.6, 3.7] },
+          { "p": [10.1, 3.35], "text": "Bezahlt an der Kasse vorn rechts – am Ende des Hauptwegs", "dauer": 2.5, "blick": [10.1, 2.4] },
+          { "p": [8.5, 3.3] },
+          { "p": [8.3, 1.6] },
+          { "p": [3, 1.4] },
+          { "p": [2.5, -3.5], "text": "Verlässt den Laden – Rundgang durch alle Zonen", "dauer": 1.5 }
+        ]
+      },
+      {
+        "name": "Sammler",
+        "beschreibung": "geht direkt zu Second-Hand",
+        "farbe": "#355070",
+        "punkte": [
+          { "p": [2.5, -3.5] },
+          { "p": [2.5, 0.4], "text": "Sammler kennt den Laden – kein Orientierungsstopp nötig", "dauer": 1.2, "blick": [6, 8] },
+          { "p": [3, 2] },
+          { "p": [3, 6.2] },
+          { "p": [6.2, 6.2] },
+          { "p": [6.2, 7.6], "text": "Digging: blättert Second-Hand-Kisten A–M – abseits des Hauptstroms", "dauer": 4, "blick": [5.2, 7.6] },
+          { "p": [6.2, 9.6], "text": "Kiste N–Z – lange Verweildauer ohne den Weg zu blockieren", "dauer": 3.5, "blick": [7.2, 9.6] },
+          { "p": [6.2, 11] },
+          { "p": [8.2, 11.3], "text": "Hört den Fund an der Hörstation an", "dauer": 3, "blick": [8.8, 11.95] },
+          { "p": [9.2, 11.3] },
+          { "p": [9.2, 4.5] },
+          { "p": [10.1, 3.35], "text": "Bezahlt an der Kasse", "dauer": 2, "blick": [10.1, 2.4] },
+          { "p": [8.5, 3.3] },
+          { "p": [8.3, 1.6] },
+          { "p": [3, 1.4] },
+          { "p": [2.5, -3.5], "text": "Verlässt den Laden", "dauer": 1.5 }
+        ]
+      }
+    ]
+  },
   "start": {
     "position": [2.5, 0.6],
     "blickrichtung_grad": 0,

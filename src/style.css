@@ -380,3 +380,33 @@ body.presenting #btn-sprint { display: none; }
 .sl-quellen { margin-top: 16px; font-size: 15px; }
 .sl-hinweise { margin: 16px 0 0; padding-left: 18px; font-size: 13px; color: #9a958e; }
 .sl-team { margin: 16px 0 0; font-size: 14px; color: #c9c4bc; }
+
+/* Kundensimulation */
+#sim-caption {
+  position: fixed;
+  z-index: 25;
+  left: 50%;
+  bottom: calc(24px + var(--safe-b));
+  transform: translateX(-50%);
+  width: min(620px, calc(100vw - 360px));
+  background: rgba(20, 20, 23, 0.88);
+  border: 1px solid rgba(232, 119, 46, 0.55);
+  border-radius: 14px;
+  padding: 12px 18px;
+  text-align: center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+#sim-caption[hidden] { display: none; }
+#sim-caption.ic-in { animation: ic-in 0.35s ease-out; }
+#sim-caption .sim-who { font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--akzent); }
+#sim-caption p { margin: 4px 0; font-size: 17px; line-height: 1.35; }
+#sim-caption small { font-size: 11px; color: #9a958e; }
+body.simulating #joystick,
+body.simulating #btn-sprint,
+body.simulating #crosshair { display: none; }
+body.touch-mode #sim-caption { bottom: calc(100px + var(--safe-b)); }
+body.top-mode #sim-caption { top: calc(8px + var(--safe-t)); bottom: auto; left: auto; right: calc(104px + var(--safe-r)); transform: none; width: min(430px, 40vw); padding: 8px 12px; }
+body.top-mode #sim-caption p { font-size: 14px; }
+body.top-mode #sim-caption small { display: none; }
+@media (max-width: 800px) { #sim-caption { width: calc(100vw - 40px); bottom: calc(110px + var(--safe-b)); } }
