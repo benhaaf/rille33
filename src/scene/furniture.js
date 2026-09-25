@@ -525,7 +525,7 @@ export function buildFurniture(layout) {
     [10.6, 9.0, [1, 0], 'stehen'], // Hardware
     [4.6, 4.5, [0, -1], 'stoebern'], // Neuheiten
   ];
-  const staffLook = { top: '#1c1c1f', bag: false };
+  const staffLook = { top: '#1c1c1f', bag: false, apron: true, jacket: null, skirt: false, sleeves: 'kurz' };
   for (const [x, z, dir, pose, staff] of people) {
     addStaticPerson(b, randomLook(rand, staff ? staffLook : {}), x, z, yawFacing(...dir), pose);
     if (!staff) colliders.push([x - 0.22, x + 0.22, z - 0.22, z + 0.22]); // Personal blockiert Arbeitsgang/Kasse nicht

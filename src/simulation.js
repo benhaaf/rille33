@@ -28,7 +28,7 @@ export class Simulation {
     const k = this.cfg.kunden[this.next % this.cfg.kunden.length];
     this.next++;
     this.current = k;
-    const look = randomLook(rng(this.next * 13), { top: k.farbe, bag: false, scale: 1 });
+    const look = randomLook(rng(this.next * 13), { top: k.farbe, bag: true, jacket: null, scale: 1 });
     this.walker = new Walker(look);
     this.scene.add(this.walker.group);
     this.pts = k.punkte;
